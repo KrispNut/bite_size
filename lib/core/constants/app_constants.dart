@@ -12,8 +12,12 @@ class AppConstants {
 
   static String get geminiApiKey => dotenv.env['GEMINI_API_KEY'] ?? '';
 
-  /// The Supabase Auth email of the admin user who can edit the Roti Ledger.
-  static String get adminEmail => dotenv.env['ADMIN_EMAIL'] ?? '';
+  // Who is an admin, and who receives pings, are both database questions and
+  // neither is read from .env any more. Admin is `public.users.role`, enforced
+  // by RLS and read through `IdentityService.instance.isAdmin`; there may be
+  // any number of admins. The ping target is the one row flagged
+  // `is_ping_target` (migration 009). Both change with an UPDATE in Supabase
+  // and no rebuild — which is the whole point, since .env ships inside the APK.
 
   static Future<void> getDeviceInfo() async {
     var deviceInfo = DeviceInfoPlugin();

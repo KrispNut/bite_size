@@ -1,14 +1,27 @@
 import 'package:flutter/material.dart';
+import '/core/theme/activity_packs.dart';
 import 'package:provider/provider.dart';
-import '/core/alerts/app_alerts.dart';
-import '/core/shared/custom_button.dart';
-import '/core/shared/custom_textfield.dart';
+import '/core/alerts/toast.dart';
+import '/core/services/sound_service.dart';
+import '/core/widgets/app_icon.dart';
+import '/core/widgets/counter_row.dart';
+import '/core/widgets/custom_button.dart';
+import '/core/widgets/custom_textfield.dart';
 import '/core/theme/app_colors.dart';
-import '/core/theme/app_dimens.dart';
-import '/core/theme/textfont_styles.dart';
-import '/core/theme/theme_service.dart';
+import '/core/theme/app_theme.dart';
+import '/core/theme/text_styles.dart';
+import '/core/widgets/sheet_handle.dart';
 import '/features/dashboard/dashboard_viewmodel.dart';
+import '/generated/assets.dart';
 
+/// Join or edit today's roster. Three questions, in the order people answer
+/// them: are you bringing something, what is it, how many units do you need.
+///
+/// It used to open with a deep-teal title card, a negatively phrased switch
+/// ("I didn't bring anything"), and two stepper tiles side by side, one of
+/// which asked how many people the dish covers. That number is gone: nobody
+/// counted portions honestly, so it only ever produced false alarms. What's
+/// left is a plain heading, a two-way choice, one field and one stepper.
 class AddEntrySheet extends StatefulWidget {
   const AddEntrySheet({super.key});
 
@@ -18,7 +31,10 @@ class AddEntrySheet extends StatefulWidget {
       isScrollControlled: true,
       backgroundColor: AppColors.surface,
       barrierColor: AppColors.scrim,
-      shape: const RoundedRectangleBorder(borderRadius: AppRadius.sheet),
+      shape: RoundedRectangleBorder(
+        borderRadius: AppRadius.sheet,
+        side: BorderSide(color: AppColors.ink, width: AppDecor.strokeWidth),
+      ),
       builder: (_) => const AddEntrySheet(),
     );
   }
@@ -31,8 +47,7 @@ class _AddEntrySheetState extends State<AddEntrySheet> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _dishCtrl;
 
-  int _portions = 0;
-  int _rotis = 0;
+  int _units = 0;
   bool _eatingOnly = false;
 
   @override
@@ -41,11 +56,13 @@ class _AddEntrySheetState extends State<AddEntrySheet> {
     final viewModel = context.read<DashboardViewModel>();
     final existing = viewModel.myEntry;
 
-    _dishCtrl = TextEditingController(text: existing?.dishName == 'Nothing' ? '' : existing?.dishName ?? '');
-    _portions = existing?.portions ?? 0;
-    _rotis = existing?.rotisNeeded ?? 0;
-    // An existing entry with no portions means they signed up to eat only.
-    _eatingOnly = existing != null && existing.portions == 0;
+    _dishCtrl = TextEditingController(
+      text: existing?.contribution == 'Nothing'
+          ? ''
+          : existing?.contribution ?? '',
+    );
+    _units = existing?.unitsTaken ?? 0;
+    _eatingOnly = existing != null && existing.covers == 0;
   }
 
   @override
@@ -54,16 +71,10 @@ class _AddEntrySheetState extends State<AddEntrySheet> {
     super.dispose();
   }
 
-  void _toggleEatingOnly(bool value) {
-    setState(() {
-      _eatingOnly = value;
-    });
-  }
-
   Future<void> _submit() async {
     final viewModel = context.read<DashboardViewModel>();
     debugPrint(
-      '🖱️ [ON_TAP] Submit entry form button clicked | Name: "${viewModel.myEntry?.userName ?? viewModel.currentUserName}", Dish: "${_dishCtrl.text.trim()}"',
+      '🖱️ [ON_TAP] Submit entry form button clicked | Name: "${viewModel.myEntry?.userName ?? viewModel.currentUserName}", Dish: "${_dishCtrl.text.trim()}", eatingOnly: $_eatingOnly',
     );
     if (!_formKey.currentState!.validate()) {
       debugPrint('⚠️ [FORM VALIDATION] Form validation failed');
@@ -71,21 +82,25 @@ class _AddEntrySheetState extends State<AddEntrySheet> {
     }
 
     Navigator.of(context).pop();
-    ShowToastDialog.showLoader('Saving entry...');
-
-    final error = await viewModel.submitEntry(
-      userName: viewModel.myEntry?.userName ?? viewModel.currentUserName,
-      dishName: _eatingOnly ? 'Nothing' : _dishCtrl.text.trim(),
-      portions: _eatingOnly ? 0 : _portions,
-      rotisNeeded: _rotis,
+    await ShowToastDialog.whileLoading(
+      'Saving entry...',
+      () => viewModel.submitEntry(
+        userName: viewModel.myEntry?.userName ?? viewModel.currentUserName,
+        contribution: _eatingOnly ? 'Nothing' : _dishCtrl.text.trim(),
+        // The portions column now only carries one bit: 0 is "brought
+        // nothing", anything else is "brought something". The roster tile
+        // and the AI check both read it that way; nobody asks for the number.
+        covers: _eatingOnly ? 0 : 1,
+        unitsTaken: _units,
+      ),
+      success: 'You\'re on today\'s roster! 🍛',
     );
-
-    ShowToastDialog.closeLoader();
-    ShowToastDialog.showToast(error ?? 'You\'re on today\'s roster! 🍛');
   }
 
   @override
   Widget build(BuildContext context) {
+    final labels = PackService.labels;
+    final modules = PackService.modules;
     final isEditing = context.read<DashboardViewModel>().myEntry != null;
 
     return ListenableBuilder(
@@ -107,74 +122,88 @@ class _AddEntrySheetState extends State<AddEntrySheet> {
                 children: [
                   const SheetHandle(),
                   Text(
-                    isEditing ? 'Edit your entry' : 'Join today\'s lunch',
+                    isEditing
+                        ? 'Edit your entry'
+                        : "Join today's ${labels.sessionNoun}",
                     style: AppText.h2,
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Tell the runner what you brought and how many rotis you need.',
+                    modules.units
+                        ? 'What you ${labels.contributionVerb}, and how many '
+                              '${labels.unitPlural} you need.'
+                        : 'What you ${labels.contributionVerb}.',
                     style: AppText.bodySm,
                   ),
-                  const SizedBox(height: AppSpace.xl),
-
-                  _EatingOnlyToggle(
-                    value: _eatingOnly,
-                    onChanged: _toggleEatingOnly,
-                  ),
                   const SizedBox(height: AppSpace.md),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _Choice(
+                          label: 'Bringing a ${labels.contribution}',
+                          svgAsset: Assets.svg.salan.path,
+                          selected: !_eatingOnly,
+                          onTap: () => setState(() => _eatingOnly = false),
+                        ),
+                      ),
+                      const SizedBox(width: AppSpace.xs),
+                      Expanded(
+                        child: _Choice(
+                          label: labels.attendingOnly,
+                          icon: Icons.restaurant_rounded,
+                          selected: _eatingOnly,
+                          onTap: () => setState(() => _eatingOnly = true),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpace.sm),
 
                   AnimatedSize(
                     duration: const Duration(milliseconds: 200),
                     alignment: Alignment.topCenter,
                     child: _eatingOnly
                         ? const SizedBox.shrink()
-                        : Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CustomTextField(
-                                context: context,
-                                controller: _dishCtrl,
-                                enabled: true,
-                                label: 'What did you bring?',
-                                hintText: 'e.g. Aloo Gosht',
-                                type: TextInputType.text,
-                                textInputAction: TextInputAction.done,
-                                validatorFn: (v) =>
-                                    (v == null || v.trim().isEmpty)
-                                        ? 'Enter a dish, or switch off "eating only"'
-                                        : null,
-                              ),
-                              const SizedBox(height: AppSpace.lg),
-                              _CounterRow(
-                                label: 'How many people does it feed?',
-                                value: _portions,
-                                max: 20,
-                                icon: Icons.restaurant_rounded,
-                                accent: AppColors.success,
-                                onChanged: (v) => setState(() => _portions = v),
-                              ),
-                            ],
+                        : Padding(
+                            padding: const EdgeInsets.only(bottom: AppSpace.sm),
+                            child: CustomTextField(
+                              context: context,
+                              controller: _dishCtrl,
+                              enabled: true,
+                              label: 'What did you ${labels.contributionVerb}?',
+                              hintText: 'Your ${labels.contribution}',
+                              type: TextInputType.text,
+                              textInputAction: TextInputAction.done,
+                              validatorFn: (v) =>
+                                  (v == null || v.trim().isEmpty)
+                                  ? 'Name the ${labels.contribution}, or pick '
+                                        '${labels.attendingOnly.toLowerCase()}'
+                                  : null,
+                            ),
                           ),
                   ),
 
-                  _CounterRow(
-                    label: 'Rotis you need',
-                    value: _rotis,
-                    max: 15,
-                    icon: Icons.local_fire_department_rounded,
-                    accent: AppColors.accentWarm,
-                    onChanged: (v) => setState(() => _rotis = v),
-                  ),
+                  if (modules.units)
+                    CounterRow(
+                      label: '${labels.unitPluralTitle} you need',
+                      value: _units,
+                      max: 15,
+                      icon: Icons.local_fire_department_rounded,
+                      accent: AppColors.accentWarm,
+                      onChanged: (v) => setState(() => _units = v),
+                    ),
 
-                  const SizedBox(height: AppSpace.xl),
+                  const SizedBox(height: AppSpace.lg),
                   CustomButton(
                     onPress: _submit,
                     text: isEditing ? 'Update entry' : 'Count me in',
-                    btnColor: AppColors.primary,
-                    textColor: AppColors.onPrimary,
+                    btnColor: AppColors.primaryDeep,
+                    textColor: AppColors.textOnBrand,
                     isIcon: true,
                     iconData: Icons.check_rounded,
-                    iconColor: AppColors.onPrimary,
+                    iconColor: AppColors.textOnBrand,
+                    height: 56,
                   ),
                 ],
               ),
@@ -186,152 +215,74 @@ class _AddEntrySheetState extends State<AddEntrySheet> {
   }
 }
 
-class _EatingOnlyToggle extends StatelessWidget {
-  final bool value;
-  final ValueChanged<bool> onChanged;
-
-  const _EatingOnlyToggle({required this.value, required this.onChanged});
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: value ? AppColors.primarySoft : AppColors.surfaceAlt,
-      borderRadius: AppRadius.rSm,
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: () => onChanged(!value),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpace.sm,
-            vertical: AppSpace.xs,
-          ),
-          child: Row(
-            children: [
-              Icon(
-                value
-                    ? Icons.check_circle_rounded
-                    : Icons.radio_button_unchecked_rounded,
-                size: 19,
-                color: value ? AppColors.primary : AppColors.textTertiary,
-              ),
-              const SizedBox(width: AppSpace.xs),
-              Expanded(
-                child: Text(
-                  'I didn\'t bring anything — just eating',
-                  style: getMediumStyle(
-                    fontSize: 13,
-                    color: value ? AppColors.primary : AppColors.textSecondary,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Tap-to-step counter. Faster than a keyboard for the 0–15 range these
-/// fields actually live in, and it can't produce invalid input.
-class _CounterRow extends StatelessWidget {
+/// One half of the bringing / eating-only choice. Selected reads as the
+/// pressed-in option: brand tint, ink stroke, bold; the other sits as a
+/// recessed well. Stating both options beats a switch whose off state has
+/// to be read as a double negative.
+class _Choice extends StatelessWidget {
   final String label;
-  final int value;
-  final int max;
-  final IconData icon;
-  final Color accent;
-  final ValueChanged<int> onChanged;
-
-  const _CounterRow({
-    required this.label,
-    required this.value,
-    required this.max,
-    required this.icon,
-    required this.accent,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpace.sm,
-        vertical: AppSpace.xs + 2,
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceAlt,
-        borderRadius: AppRadius.rSm,
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, size: 18, color: accent),
-          const SizedBox(width: AppSpace.xs),
-          Expanded(
-            child: Text(
-              label,
-              style: getSemiBoldStyle(fontSize: 13, color: AppColors.textColor),
-            ),
-          ),
-          _StepButton(
-            icon: Icons.remove_rounded,
-            enabled: value > 0,
-            onTap: () => onChanged(value - 1),
-          ),
-          SizedBox(
-            width: 38,
-            child: Text(
-              '$value',
-              textAlign: TextAlign.center,
-              style: getExtraBoldStyle(
-                fontSize: 18,
-                color: value == 0
-                    ? AppColors.textTertiary
-                    : AppColors.textColor,
-              ),
-            ),
-          ),
-          _StepButton(
-            icon: Icons.add_rounded,
-            enabled: value < max,
-            onTap: () => onChanged(value + 1),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _StepButton extends StatelessWidget {
-  final IconData icon;
-  final bool enabled;
+  final String? svgAsset;
+  final IconData? icon;
+  final bool selected;
   final VoidCallback onTap;
 
-  const _StepButton({
-    required this.icon,
-    required this.enabled,
+  const _Choice({
+    required this.label,
+    this.svgAsset,
+    this.icon,
+    required this.selected,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: enabled ? AppColors.surface : Colors.transparent,
-      shape: CircleBorder(
-        side: BorderSide(
-          color: enabled ? AppColors.borderStrong : AppColors.border,
+    return GestureDetector(
+      onTap: () {
+        if (selected) return;
+        SoundService.instance.playTapSound();
+        onTap();
+      },
+      behavior: HitTestBehavior.opaque,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 120),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpace.sm,
+          vertical: AppSpace.sm,
         ),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: enabled ? onTap : null,
-        child: Padding(
-          padding: const EdgeInsets.all(6),
-          child: Icon(
-            icon,
-            size: 18,
-            color: enabled ? AppColors.textColor : AppColors.textTertiary,
-          ),
+        decoration: selected
+            ? AppDecor.card(
+                color: AppColors.primarySoft,
+                radius: AppRadius.sm,
+                borderColor: AppColors.ink,
+                shadow: false,
+              )
+            : AppDecor.well(),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (svgAsset != null)
+              AppIcon(svgAsset!, size: 20)
+            else
+              Icon(
+                icon,
+                size: 19,
+                color: selected ? AppColors.primary : AppColors.textTertiary,
+              ),
+            const SizedBox(width: AppSpace.xs),
+            Flexible(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: selected
+                    ? getBoldStyle(fontSize: 13.5, color: AppColors.textColor)
+                    : getMediumStyle(
+                        fontSize: 13.5,
+                        color: AppColors.textSecondary,
+                      ),
+              ),
+            ),
+          ],
         ),
       ),
     );

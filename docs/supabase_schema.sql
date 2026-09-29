@@ -1,4 +1,8 @@
 -- Bite Size Supabase Schema Definition
+--
+-- ⚠️  This file describes the ORIGINAL schema. It is no longer the whole
+--     picture — apply the numbered files in docs/migrations/ on top of it,
+--     in order. Migration 001 adds roles, auth_uid, claim_identity() and RLS.
 
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";

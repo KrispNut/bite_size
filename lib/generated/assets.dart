@@ -9,128 +9,42 @@ import 'package:lottie/src/composition.dart';
 class Assets {
   Assets._();
 
-  static const $AssetsImagesGen images = $AssetsImagesGen();
   static const $AssetsLottieGen lottie = $AssetsLottieGen();
   static const $AssetsSvgGen svg = $AssetsSvgGen();
-}
-
-class $AssetsImagesGen {
-  const $AssetsImagesGen();
-
-  final AssetGenImage splash = const AssetGenImage('assets/images/splash.png');
 }
 
 class $AssetsSvgGen {
   const $AssetsSvgGen();
 
-  final SvgGenImage coupon = const SvgGenImage('assets/svg/coupon.svg');
-  final SvgGenImage couponCover = const SvgGenImage(
-    'assets/svg/coupon_cover.svg',
-  );
-  final SvgGenImage deliveryRider = const SvgGenImage(
-    'assets/svg/delivery_rider.svg',
-  );
-  final SvgGenImage destination = const SvgGenImage(
-    'assets/svg/destination.svg',
-  );
-  final SvgGenImage editDark = const SvgGenImage('assets/svg/edit_dark.svg');
-  final SvgGenImage editLight = const SvgGenImage('assets/svg/edit_light.svg');
-  final SvgGenImage facebook = const SvgGenImage('assets/svg/facebook.svg');
   final SvgGenImage googleLogo = const SvgGenImage(
     'assets/svg/google_logo.svg',
   );
-  final SvgGenImage icMoneybill = const SvgGenImage(
-    'assets/svg/ic_moneybill.svg',
+  final SvgGenImage moon = const SvgGenImage('assets/svg/moon.svg');
+  final SvgGenImage party = const SvgGenImage('assets/svg/party.svg');
+  final SvgGenImage plate = const SvgGenImage('assets/svg/plate.svg');
+  final SvgGenImage receipt = const SvgGenImage('assets/svg/receipt.svg');
+  final SvgGenImage roti = const SvgGenImage('assets/svg/roti.svg');
+  final SvgGenImage runner = const SvgGenImage('assets/svg/runner.svg');
+  final SvgGenImage salan = const SvgGenImage('assets/svg/salan.svg');
+  final SvgGenImage sparkle = const SvgGenImage('assets/svg/sparkle.svg');
+  final SvgGenImage splashImage = const SvgGenImage(
+    'assets/svg/splash_image.svg',
   );
-  final SvgGenImage icPercentage = const SvgGenImage(
-    'assets/svg/ic_percentage.svg',
-  );
-  final SvgGenImage icRadioCheck = const SvgGenImage(
-    'assets/svg/ic_radio_check.svg',
-  );
-  final SvgGenImage icRadioUncheck = const SvgGenImage(
-    'assets/svg/ic_radio_uncheck.svg',
-  );
-  final SvgGenImage instagram = const SvgGenImage('assets/svg/instagram.svg');
-  final AssetGenImage radioActiive = const AssetGenImage(
-    'assets/svg/radio-actiive.jpeg',
-  );
-  final SvgGenImage restuarant = const SvgGenImage('assets/svg/restuarant.svg');
-  final SvgGenImage tiktok = const SvgGenImage('assets/svg/tiktok.svg');
-  final SvgGenImage user = const SvgGenImage('assets/svg/user.svg');
-  final SvgGenImage voucher = const SvgGenImage('assets/svg/voucher.svg');
-  final SvgGenImage voucherCover = const SvgGenImage(
-    'assets/svg/voucher_cover.svg',
-  );
-  final SvgGenImage vouchersvgDark = const SvgGenImage(
-    'assets/svg/vouchersvg_dark.svg',
-  );
-  final SvgGenImage vouchersvgLight = const SvgGenImage(
-    'assets/svg/vouchersvg_light.svg',
-  );
-  final SvgGenImage whatsapp = const SvgGenImage('assets/svg/whatsapp.svg');
+  final SvgGenImage sun = const SvgGenImage('assets/svg/sun.svg');
+  final SvgGenImage tandoor = const SvgGenImage('assets/svg/tandoor.svg');
+  final SvgGenImage team = const SvgGenImage('assets/svg/team.svg');
 }
 
 class $AssetsLottieGen {
   const $AssetsLottieGen();
 
-  final String celebrate = 'assets/lottie/celebrate.json';
-  final String emptyCart = 'assets/lottie/empty_cart.json';
-  final LottieGenImage facebook = const LottieGenImage(
-    'assets/lottie/facebook.json',
-  );
-  final LottieGenImage hourglassLoading = const LottieGenImage(
-    'assets/lottie/hourglass_loading.json',
-  );
-  final LottieGenImage instagram = const LottieGenImage(
-    'assets/lottie/instagram.json',
-  );
-  final LottieGenImage linkedin = const LottieGenImage(
-    'assets/lottie/linkedin.json',
-  );
+  final LottieGenImage idle = const LottieGenImage('assets/lottie/idle.json');
   final LottieGenImage loading = const LottieGenImage(
     'assets/lottie/loading.json',
   );
-  final LottieGenImage loadingBurger = const LottieGenImage(
-    'assets/lottie/loading_burger.json',
-  );
-  final LottieGenImage loadingCoffee = const LottieGenImage(
-    'assets/lottie/loading_coffee.json',
-  );
-  final LottieGenImage noOrder = const LottieGenImage(
-    'assets/lottie/no-order.json',
-  );
   final String noInternet = 'assets/lottie/no_internet.json';
-  final LottieGenImage rightPointingArrow = const LottieGenImage(
-    'assets/lottie/right_pointing_arrow.json',
-  );
   final LottieGenImage runner = const LottieGenImage(
     'assets/lottie/runner.json',
-  );
-  final LottieGenImage splashLoading = const LottieGenImage(
-    'assets/lottie/splash_loading.json',
-  );
-  final LottieGenImage success = const LottieGenImage(
-    'assets/lottie/success.json',
-  );
-  final LottieGenImage tiktok = const LottieGenImage(
-    'assets/lottie/tiktok.json',
-  );
-  final LottieGenImage twitter = const LottieGenImage(
-    'assets/lottie/twitter.json',
-  );
-  final LottieGenImage user = const LottieGenImage('assets/lottie/user.json');
-  final LottieGenImage userDark = const LottieGenImage(
-    'assets/lottie/user_dark.json',
-  );
-  final LottieGenImage userLight = const LottieGenImage(
-    'assets/lottie/user_light.json',
-  );
-  final LottieGenImage whatsapp = const LottieGenImage(
-    'assets/lottie/whatsapp.json',
-  );
-  final LottieGenImage youtube = const LottieGenImage(
-    'assets/lottie/youtube.json',
   );
 }
 
@@ -234,6 +148,9 @@ class SvgGenImage {
     bool excludeFromSemantics = false,
     SvgTheme? theme,
     Clip clipBehavior = Clip.hardEdge,
+    Color? color,
+    BlendMode colorBlendMode = BlendMode.srcIn,
+    bool cacheColorFilter = false,
   }) {
     return SvgPicture.asset(
       _assetName,
@@ -250,7 +167,10 @@ class SvgGenImage {
       semanticsLabel: semanticsLabel,
       excludeFromSemantics: excludeFromSemantics,
       theme: theme,
+      color: color,
+      colorBlendMode: colorBlendMode,
       clipBehavior: clipBehavior,
+      cacheColorFilter: cacheColorFilter,
     );
   }
 

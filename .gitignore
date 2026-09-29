@@ -4,6 +4,8 @@
 *.pyc
 *.swp
 .DS_Store
+Thumbs.db
+desktop.ini
 .atom/
 .build/
 .buildlog/
@@ -27,6 +29,7 @@ migrate_working_dir/
 **/doc/api/
 **/ios/Flutter/.last_build_id
 .dart_tool/
+.flutter-plugins
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
@@ -44,10 +47,50 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Dotenv and Secrets
+# Kotlin 2 compiler daemon state
+.kotlin/
+
+# AI agents: tool settings, skills, MCP config and handoff notes stay local
+.agents/
+.claude/
+.cursor/
+.windsurf/
+.gemini/
+.codex/
+.kiro/
+.junie/
+.roo/
+.continue/
+.aider*
+.clinerules
+.cursorrules
+.windsurfrules
+.mcp.json
+mcp_config.json
+skills-lock.json
+CLAUDE.md
+CLAUDE.local.md
+AGENTS.md
+GEMINI.md
+HANDOFF.md
+.github/copilot-instructions.md
+
+# Supabase CLI local state and function secrets
+supabase/.temp/
+supabase/.branches/
+supabase/.env
+supabase/functions/**/.env
+
+# Dotenv and secrets. `.env` is bundled into the app at build time, but it
+# must never be committed.
 .env
+.env.*
+!.env.example
 client_secret.json
 client_secret_*.json
 credentials.json
 google-services.json
 GoogleService-Info.plist
+# Firebase service account keys (FCM_SERVICE_ACCOUNT_JSON lives on Supabase)
+*-firebase-adminsdk-*.json
+service-account*.json

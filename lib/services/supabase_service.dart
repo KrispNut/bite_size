@@ -1,9 +1,10 @@
 import 'package:flutter/foundation.dart';
-import 'package:intl/intl.dart';
+import '/core/theme/activity_packs.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '/features/dashboard/models/extra_order.dart';
-import '/features/dashboard/models/lunch_entry.dart';
-import '/features/dashboard/models/lunch_session.dart';
+import '/features/dashboard/models/shared_expense.dart';
+import '/features/dashboard/models/ping.dart';
+import '/features/dashboard/models/roster_entry.dart';
+import '/features/dashboard/models/activity_session.dart';
 import '/features/ledger/models/ledger_transaction.dart';
 
 /// Service layer interacting with Supabase database and authentication.
@@ -15,13 +16,14 @@ class SupabaseService {
   SupabaseClient get _client => Supabase.instance.client;
 
   /// Session doc ID for today, e.g. "2026-07-17".
-  static String todaySessionId() =>
-      DateFormat('yyyy-MM-dd').format(DateTime.now());
+  /// Pack-aware: the lunch pack keeps bare dates, every other pack prefixes
+  /// its id, so two packs never share a day's row.
+  static String todaySessionId() => PackService.todaySessionId();
 
   // --- STREAMS ---
 
   /// Emits today's session updates.
-  Stream<LunchSession?> watchSession(String sessionId) {
+  Stream<ActivitySession?> watchSession(String sessionId) {
     debugPrint(
       '📡 [SUPABASE DB] Listening to session stream for ID: $sessionId',
     );
@@ -34,12 +36,12 @@ class SupabaseService {
             '💾 [SUPABASE DB] Received session snapshot for $sessionId: ${list.isNotEmpty ? list.first : "No session yet"}',
           );
           if (list.isEmpty) return null;
-          return LunchSession.fromJson(list.first);
+          return ActivitySession.fromJson(list.first);
         });
   }
 
   /// Emits entry list updates for the session.
-  Stream<List<LunchEntry>> watchEntries(String sessionId) {
+  Stream<List<RosterEntry>> watchEntries(String sessionId) {
     debugPrint(
       '📡 [SUPABASE DB] Listening to entries stream for session ID: $sessionId',
     );
@@ -52,7 +54,7 @@ class SupabaseService {
             '💾 [SUPABASE DB] Received entries snapshot count: ${list.length}',
           );
           final entries = list
-              .map((json) => LunchEntry.fromJson(json))
+              .map((json) => RosterEntry.fromJson(json))
               .toList();
 
           // Fetch user profile details (latest name & photo) from public.users
@@ -145,12 +147,13 @@ class SupabaseService {
       '🚀 [SUPABASE DB] Updating profile for user $userId | Name: $name | Photo: $photoUrl',
     );
     try {
-      await _client.from('users').upsert({
-        'id': userId,
-        'name': name,
-        'email': _client.auth.currentUser?.email ?? '',
-        'photo_url': ?photoUrl,
-      });
+      await _client
+          .from('users')
+          .update({
+            'name': name,
+            if (photoUrl != null && photoUrl.isNotEmpty) 'photo_url': photoUrl,
+          })
+          .eq('id', userId);
 
       await _client
           .from('entries')
@@ -167,7 +170,13 @@ class SupabaseService {
           .eq('tandoor_runner_id', userId);
 
       await _client.auth.updateUser(
-        UserAttributes(data: {'name': name, 'avatar_url': ?photoUrl}),
+        UserAttributes(
+          data: {
+            'name': name,
+            if (photoUrl != null && photoUrl.isNotEmpty) 'avatar_url': photoUrl,
+            if (photoUrl != null && photoUrl.isNotEmpty) 'picture': photoUrl,
+          },
+        ),
       );
       debugPrint(
         '✅ [SUPABASE DB SUCCESS] User profile, entries & sessions updated!',
@@ -178,67 +187,49 @@ class SupabaseService {
     }
   }
 
+  /// The device token push goes to. Written by PushService on sign-in and
+  /// whenever Firebase rotates it; read by the ping-push Edge Function.
+  Future<void> saveFcmToken({
+    required String userId,
+    required String token,
+  }) async {
+    debugPrint('🚀 [SUPABASE DB] Saving FCM token for $userId');
+    await _client.from('users').update({'fcm_token': token}).eq('id', userId);
+  }
+
   // --- WRITES ---
+
+  /// Today's (or any day's) session row, created by `ensure_session()` if
+  /// nobody has touched that day yet.
+  Future<ActivitySession> _ensureSession(String sessionId) async {
+    await _client.rpc('ensure_session', params: {'p_session_id': sessionId});
+    final row = await _client
+        .from('sessions')
+        .select()
+        .eq('id', sessionId)
+        .single();
+    return ActivitySession.fromJson(row);
+  }
 
   /// Create or update the user's entry for the day.
   Future<void> upsertEntry({
     required String sessionId,
-    required LunchEntry entry,
+    required RosterEntry entry,
   }) async {
     debugPrint(
-      '🚀 [SUPABASE DB] Attempting upsertEntry | User: "${entry.userName}" (${entry.userId}) | Dish: "${entry.dishName}" | Portions: ${entry.portions} | Rotis: ${entry.rotisNeeded}',
+      '🚀 [SUPABASE DB] Attempting upsertEntry | User: "${entry.userName}" (${entry.userId}) | contribution: "${entry.contribution}" | covers: ${entry.covers} | units: ${entry.unitsTaken}',
     );
     try {
-      // 1. Ensure user profile exists in public.users table
-      debugPrint(
-        '👤 [SUPABASE DB] Ensuring user profile exists in public.users table for ${entry.userId}',
-      );
-      await _client.from('users').upsert({
-        'id': entry.userId,
-        'name': entry.userName,
-        'email': _client.auth.currentUser?.email ?? '',
-        if (entry.userPhotoUrl != null) 'photo_url': entry.userPhotoUrl,
-      });
+      // The user row is created by seeding and bound by claim_identity() —
+      // never minted here. Auto-creating it would let anyone who authenticates
+      // add themselves to the roster, which is exactly what the allowlist
+      // exists to prevent.
 
-      // 2. Ensure the session exists
-      final sessionResponse = await _client
-          .from('sessions')
-          .select()
-          .eq('id', sessionId)
-          .maybeSingle();
-
-      if (sessionResponse == null) {
-        final now = DateTime.now();
-        debugPrint(
-          '➕ [SUPABASE DB] Creating new daily session doc for $sessionId',
-        );
-        await _client.from('sessions').insert({
-          'id': sessionId,
-          'date': DateTime(
-            now.year,
-            now.month,
-            now.day,
-          ).toIso8601String().substring(0, 10),
-          'cutoff_at': DateTime(
-            now.year,
-            now.month,
-            now.day,
-            12,
-            30,
-          ).toIso8601String(),
-          'status': 'open',
-        });
-      } else {
-        final session = LunchSession.fromJson(sessionResponse);
-        if (session.status != SessionStatus.open) {
-          debugPrint(
-            '⚠️ [SUPABASE DB] Roster is locked for session $sessionId',
-          );
-          throw StateError('Roster is locked for today.');
-        }
+      final session = await _ensureSession(sessionId);
+      if (session.status != SessionStatus.open) {
+        throw StateError('Roster is locked for today.');
       }
 
-      // 2. Upsert entry
       await _client.from('entries').upsert(entry.toJson(sessionId));
       debugPrint(
         '✅ [SUPABASE DB SUCCESS] Successfully upserted entry for ${entry.userName}!',
@@ -249,35 +240,18 @@ class SupabaseService {
     }
   }
 
-  /// Claim the Tandoor Runner role.
-  Future<void> claimTandoorRunner({
+  /// Give today's errand to someone. [userId] is null for an outsider with no
+  /// account, such as the office boy.
+  Future<void> assignRunner({
     required String sessionId,
     String? userId,
     required String userName,
   }) async {
-    debugPrint(
-      '🚀 [SUPABASE DB] Attempting claimTandoorRunner | User: "$userName" ($userId) | Session: $sessionId',
-    );
     try {
-      final sessionResponse = await _client
-          .from('sessions')
-          .select()
-          .eq('id', sessionId)
-          .maybeSingle();
-
-      if (sessionResponse == null) {
-        debugPrint(
-          '⚠️ [SUPABASE DB] Session does not exist yet for $sessionId',
-        );
-        throw StateError('Add your entry first to start today\'s session.');
-      }
-
-      final session = LunchSession.fromJson(sessionResponse);
+      // The admin can pick a runner before anyone has added an entry.
+      final session = await _ensureSession(sessionId);
       if (session.hasRunner) {
-        debugPrint(
-          '⚠️ [SUPABASE DB] Runner already claimed by ${session.tandoorRunnerName}',
-        );
-        throw StateError('${session.tandoorRunnerName} already claimed it.');
+        throw StateError('${session.runnerName} already has it.');
       }
 
       await _client
@@ -285,164 +259,297 @@ class SupabaseService {
           .update({
             'tandoor_runner_id': userId,
             'tandoor_runner_name': userName,
-            'updated_at': DateTime.now().toIso8601String(),
+            'updated_at': DateTime.now().toUtc().toIso8601String(),
           })
           .eq('id', sessionId);
-      debugPrint(
-        '✅ [SUPABASE DB SUCCESS] Successfully claimed Tandoor Runner for $userName!',
-      );
     } catch (e, st) {
-      debugPrint('❌ [SUPABASE DB ERROR] Failed claimTandoorRunner: $e\n$st');
+      debugPrint('❌ [SUPABASE DB ERROR] Failed assignRunner: $e\n$st');
       rethrow;
     }
   }
 
-  /// Emits transactions created for a session.
-  Stream<List<LedgerTransaction>> watchTransactions(String sessionId) {
-    debugPrint(
-      '📡 [SUPABASE DB] Listening to transactions stream for session ID: $sessionId',
-    );
+  /// Adds a shared expense and invites the people on it.
+  ///
+  /// `create_extra_order()` in Postgres does the split, so the per-person
+  /// amounts always add back up to the cost exactly.
+  Future<void> createSharedExpense({
+    required String sessionId,
+    required String description,
+    required int costMinor,
+    required String paidById,
+    required List<String> participantIds,
+  }) async {
+    try {
+      await _client.rpc(
+        'create_extra_order',
+        params: {
+          'p_session_id': sessionId,
+          'p_description': description,
+          'p_cost_minor': costMinor,
+          'p_paid_by': paidById,
+          'p_participants': participantIds,
+        },
+      );
+    } catch (e, st) {
+      debugPrint('❌ [SUPABASE DB ERROR] Failed createSharedExpense: $e\n$st');
+      rethrow;
+    }
+  }
+
+  Future<void> deleteSharedExpense(String expenseId) async {
+    await _client.from('extra_orders').delete().eq('id', expenseId);
+  }
+
+  /// Accept or decline an invite. Postgres re-splits the cost across whoever
+  /// is still in, so a decline never leaves a hole in the bill.
+  Future<void> respondToSharedExpense({
+    required String expenseId,
+    required bool accept,
+  }) async {
+    try {
+      await _client.rpc(
+        'respond_to_extra_order',
+        params: {'p_order_id': expenseId, 'p_accept': accept},
+      );
+    } catch (e, st) {
+      debugPrint(
+        '❌ [SUPABASE DB ERROR] Failed respondToSharedExpense: $e\n$st',
+      );
+      rethrow;
+    }
+  }
+
+  /// The runner has left: locks the roster and the shared expenses.
+  ///
+  /// Postgres refuses while any shared expense is unanswered, since the
+  /// runner wouldn't know what to buy.
+  Future<void> markDeparted(String sessionId) async {
+    try {
+      await _client.rpc(
+        'depart_for_tandoor',
+        params: {'p_session_id': sessionId},
+      );
+    } catch (e, st) {
+      debugPrint('❌ [SUPABASE DB ERROR] Failed markDeparted: $e\n$st');
+      rethrow;
+    }
+  }
+
+  /// Emits the day's shared expenses with each person's share attached.
+  Stream<List<SharedExpense>> watchSharedExpenses(String sessionId) {
     return _client
-        .from('transactions')
+        .from('extra_orders')
         .stream(primaryKey: ['id'])
         .eq('session_id', sessionId)
-        .map((list) {
-          debugPrint(
-            '💾 [SUPABASE DB] Received transactions snapshot count: ${list.length}',
-          );
-          return list.map((json) => LedgerTransaction.fromJson(json)).toList();
+        .asyncMap((rows) async {
+          final expenses = await _withShares(rows);
+          expenses.sort((a, b) {
+            if (a.createdAt == null) return 1;
+            if (b.createdAt == null) return -1;
+            return a.createdAt!.compareTo(b.createdAt!);
+          });
+          return expenses;
         });
   }
 
-  /// Mark today's food as arrived at the office table.
-  Future<void> markFoodArrived({
+  /// Turns `extra_orders` rows into [SharedExpense]s, fetching everyone's
+  /// share for them in one query.
+  Future<List<SharedExpense>> _withShares(
+    List<Map<String, dynamic>> rows,
+  ) async {
+    if (rows.isEmpty) return [];
+    final ids = rows.map((row) => row['id'].toString()).toList();
+    final shareRows = await _client
+        .from('extra_order_shares')
+        .select()
+        .inFilter('order_id', ids);
+
+    final sharesByExpense = <String, List<ExpenseShare>>{};
+    for (final row in shareRows) {
+      (sharesByExpense[row['order_id'].toString()] ??= []).add(
+        ExpenseShare.fromJson(row),
+      );
+    }
+    return [
+      for (final row in rows)
+        SharedExpense.fromJson(
+          row,
+          shares: sharesByExpense[row['id'].toString()] ?? const [],
+        ),
+    ];
+  }
+
+  // ===========================================================================
+  // PINGS
+  // ===========================================================================
+
+  /// Pings whoever is flagged `is_ping_target` in `public.users`. Raises bare
+  /// codes: ping_target_unknown, cannot_ping_self. There is no rate limit
+  /// (migration 010): repeat taps are the point.
+  ///
+  /// The recipient is deliberately not a parameter. `send_ping()` resolves it
+  /// server-side (migration 009), so a phone running an older build cannot
+  /// ping the person who used to be the target.
+  Future<void> sendPing({required String message, String? sessionId}) async {
+    debugPrint('🚀 [SUPABASE DB] Pinging the flagged target');
+    await _client.rpc(
+      'send_ping',
+      params: {'p_message': message, 'p_session_id': sessionId},
+    );
+  }
+
+  /// Pings addressed to [userId]. RLS already restricts reads to your own
+  /// rows; the filter keeps the stream small and is belt-and-braces.
+  Stream<List<Ping>> watchPingsFor(String userId) {
+    debugPrint('📡 [SUPABASE DB] Listening to pings for $userId');
+    return _client
+        .from('pings')
+        .stream(primaryKey: ['id'])
+        .eq('to_id', userId)
+        .order('created_at', ascending: false)
+        .limit(20)
+        .map((rows) {
+          debugPrint('📬 [SUPABASE DB] Pings stream: ${rows.length} row(s)');
+          return rows.map(Ping.fromJson).toList();
+        });
+  }
+
+  /// Mark what was fetched as having turned up.
+  Future<void> markArrived({
     required String sessionId,
     required String announcedByName,
   }) async {
     debugPrint(
-      '🚀 [SUPABASE DB] Marking food arrived for session $sessionId by $announcedByName',
+      '🚀 [SUPABASE DB] Marking arrival for session $sessionId by $announcedByName',
     );
     try {
       final now = DateTime.now();
       await _client
           .from('sessions')
           .update({
-            'arrived_at': now.toIso8601String(),
+            'arrived_at': now.toUtc().toIso8601String(),
             'arrived_by_name': announcedByName,
-            'updated_at': now.toIso8601String(),
+            'updated_at': now.toUtc().toIso8601String(),
           })
           .eq('id', sessionId);
-      debugPrint('✅ [SUPABASE DB SUCCESS] Food marked as arrived!');
+      debugPrint('✅ [SUPABASE DB SUCCESS] Marked as arrived!');
     } catch (e, st) {
-      debugPrint('❌ [SUPABASE DB ERROR] Failed markFoodArrived: $e\n$st');
+      debugPrint('❌ [SUPABASE DB ERROR] Failed markArrived: $e\n$st');
       rethrow;
     }
   }
 
-  /// Settle session billings and insert transactions into the ledger.
-  Future<void> settleSessionBilling({
-    required String sessionId,
-    required double totalRotiCost,
-    required List<ExtraOrder> extraOrders,
-    required List<LunchEntry> entries,
+  /// Settles a stretch of days at one [unitPrice]: everyone's units at that
+  /// price, owed to [paidById], plus every shared expense at the split its
+  /// people already agreed to. Each day is then marked settled with its bulk
+  /// cost stored, which is what the ledger reads.
+  Future<void> settleSessions({
+    required List<String> sessionIds,
+    required double unitPrice,
     required String paidById,
     required String paidByName,
   }) async {
-    debugPrint(
-      '🚀 [SUPABASE DB] Settling billing for session $sessionId | Total Rotis Cost: $totalRotiCost | Extra Orders: ${extraOrders.length}',
-    );
+    if (sessionIds.isEmpty) return;
     try {
-      final now = DateTime.now();
-
-      // 1. Update session status & roti cost
-      await _client
-          .from('sessions')
-          .update({
-            'total_roti_cost': totalRotiCost,
-            'status': 'settled',
-            'updated_at': now.toIso8601String(),
-          })
-          .eq('id', sessionId);
-
-      // 2. Insert Extra Orders if any
-      for (final extra in extraOrders) {
-        await _client.from('extra_orders').insert(extra.toJson());
-      }
-
-      // 3. Calculate and insert transactions
-      final transactions = <Map<String, dynamic>>[];
-
-      // Roti cost breakdown
-      final totalRotis = entries.fold<int>(0, (sum, e) => sum + e.rotisNeeded);
-      if (totalRotis > 0 && totalRotiCost > 0) {
-        for (final entry in entries) {
-          final share = (entry.rotisNeeded / totalRotis) * totalRotiCost;
-          if (entry.userId != paidById && share > 0) {
-            transactions.add({
-              'session_id': sessionId,
-              'type': TransactionType.roti.name,
-              'from_id': entry.userId,
-              'from_name': entry.userName,
-              'to_id': paidById,
-              'to_name': paidByName,
-              'amount': share.roundToDouble(),
-              'note': '${entry.rotisNeeded} rotis share',
-            });
-          }
-        }
-      }
-
-      // Extra orders breakdown
-      for (final extra in extraOrders) {
-        if (extra.sharedByIds.isNotEmpty && extra.cost > 0) {
-          final perPersonCost = (extra.cost / extra.sharedByIds.length)
-              .roundToDouble();
-          for (final userId in extra.sharedByIds) {
-            if (userId != extra.paidById) {
-              final participant = entries.firstWhere(
-                (e) => e.userId == userId,
-                orElse: () => LunchEntry(
-                  userId: userId,
-                  userName: 'Coworker',
-                  dishName: '',
-                  portions: 0,
-                  rotisNeeded: 0,
-                ),
-              );
-
-              transactions.add({
-                'session_id': sessionId,
-                'type': TransactionType.extraFood.name,
-                'from_id': userId,
-                'from_name': participant.userName,
-                'to_id': extra.paidById,
-                'to_name': extra.paidByName,
-                'amount': perPersonCost,
-                'note': extra.description,
-              });
-            }
-          }
-        }
-      }
-
-      if (transactions.isNotEmpty) {
-        debugPrint(
-          '➕ [SUPABASE DB] Inserting ${transactions.length} ledger transactions',
+      final entryRows = await _client
+          .from('entries')
+          .select()
+          .inFilter('session_id', sessionIds);
+      final entriesBySession = <String, List<RosterEntry>>{};
+      for (final row in entryRows) {
+        (entriesBySession[row['session_id'] as String] ??= []).add(
+          RosterEntry.fromJson(row),
         );
-        await _client.from('transactions').insert(transactions);
       }
 
-      debugPrint(
-        '✅ [SUPABASE DB SUCCESS] Successfully settled session billing!',
-      );
+      // One day at a time, so a dropped connection leaves at most one day
+      // half-written rather than the whole month.
+      for (final sessionId in sessionIds) {
+        await _settleSession(
+          sessionId: sessionId,
+          entries: entriesBySession[sessionId] ?? const [],
+          unitPrice: unitPrice,
+          paidById: paidById,
+          paidByName: paidByName,
+        );
+      }
     } catch (e, st) {
-      debugPrint('❌ [SUPABASE DB ERROR] Failed settleSessionBilling: $e\n$st');
+      debugPrint('❌ [SUPABASE DB ERROR] Failed settleSessions: $e\n$st');
       rethrow;
+    }
+  }
+
+  /// Shared expenses are read back from the database rather than passed in:
+  /// `create_extra_order` already split them exactly, and re-deriving the
+  /// shares here would bring the rounding drift back.
+  Future<void> _settleSession({
+    required String sessionId,
+    required List<RosterEntry> entries,
+    required double unitPrice,
+    required String paidById,
+    required String paidByName,
+  }) async {
+    final totalUnits = entries.fold<int>(
+      0,
+      (sum, entry) => sum + entry.unitsTaken,
+    );
+    await _client
+        .from('sessions')
+        .update({
+          'total_roti_cost': totalUnits * unitPrice,
+          'status': 'settled',
+          'updated_at': DateTime.now().toUtc().toIso8601String(),
+        })
+        .eq('id', sessionId);
+
+    final transactions = <Map<String, dynamic>>[
+      for (final entry in entries)
+        if (entry.userId != paidById && entry.unitsTaken > 0 && unitPrice > 0)
+          {
+            'session_id': sessionId,
+            'type': TransactionType.units.wire,
+            'from_id': entry.userId,
+            'from_name': entry.userName,
+            'to_id': paidById,
+            'to_name': paidByName,
+            'amount': (entry.unitsTaken * unitPrice).roundToDouble(),
+            'note': '${PackService.labels.unitCount(entry.unitsTaken)} share',
+          },
+    ];
+
+    final expenseRows = await _client
+        .from('extra_orders')
+        .select()
+        .eq('session_id', sessionId);
+    for (final expense in await _withShares(expenseRows)) {
+      // Everyone declined, so there is no bill to write.
+      if (expense.isCancelled) continue;
+      // Only accepted shares: someone who said no never owed anything, and a
+      // pending share carries zero anyway.
+      for (final share in expense.acceptedShares) {
+        if (share.userId == expense.paidById || share.amountMinor <= 0) {
+          continue;
+        }
+        transactions.add({
+          'session_id': sessionId,
+          'type': TransactionType.sharedExpense.wire,
+          'from_id': share.userId,
+          'from_name': share.userName,
+          'to_id': expense.paidById,
+          'to_name': expense.paidByName,
+          'amount': share.amount,
+          'note': expense.description,
+        });
+      }
+    }
+
+    if (transactions.isNotEmpty) {
+      await _client.from('transactions').insert(transactions);
     }
   }
 
   // =========================================================================
-  // ROTI LEDGER QUERIES
+  // LEDGER QUERIES
   // =========================================================================
 
   /// Fetch all active users, ordered by name.
@@ -462,7 +569,7 @@ class SupabaseService {
     }
   }
 
-  /// Fetch all entries within a date range for the Roti Ledger.
+  /// Fetch all entries within a date range for the ledger.
   Future<List<Map<String, dynamic>>> fetchEntriesForRange({
     required String startDate,
     required String endDate,
@@ -487,38 +594,44 @@ class SupabaseService {
     required String sessionId,
     required String userId,
     required String userName,
-    required int rotisNeeded,
+    required int unitsTaken,
   }) async {
-    debugPrint('🚀 [SUPABASE DB] Admin upserting entry | Session: $sessionId | User: $userName | Rotis: $rotisNeeded');
+    debugPrint(
+      '🚀 [SUPABASE DB] Admin upserting entry | Session: $sessionId | User: $userName | units: $unitsTaken',
+    );
     try {
-      // Ensure session exists
-      final sessionResponse = await _client
-          .from('sessions')
-          .select()
-          .eq('id', sessionId)
+      await _ensureSession(sessionId);
+
+      // Patch ONLY the unit count. Upserting the whole row here used to
+      // overwrite the person's real dish name and portion count with
+      // 'Admin entry'/0, which also made the session aggregate trigger
+      // subtract their portions.
+      final existing = await _client
+          .from('entries')
+          .select('session_id')
+          .eq('session_id', sessionId)
+          .eq('user_id', userId)
           .maybeSingle();
 
-      if (sessionResponse == null) {
-        final date = DateTime.parse(sessionId);
-        debugPrint('➕ [SUPABASE DB] Creating session for $sessionId');
-        await _client.from('sessions').insert({
-          'id': sessionId,
-          'date': sessionId,
-          'cutoff_at': DateTime(date.year, date.month, date.day, 12, 30).toIso8601String(),
-          'status': 'open',
+      if (existing == null) {
+        await _client.from('entries').insert({
+          'session_id': sessionId,
+          'user_id': userId,
+          'user_name': userName,
+          'dish_name': 'Nothing',
+          'portions': 0,
+          'rotis_needed': unitsTaken,
         });
+      } else {
+        await _client
+            .from('entries')
+            .update({'rotis_needed': unitsTaken})
+            .eq('session_id', sessionId)
+            .eq('user_id', userId);
       }
-
-      // Upsert entry
-      await _client.from('entries').upsert({
-        'session_id': sessionId,
-        'user_id': userId,
-        'user_name': userName,
-        'dish_name': 'Admin entry',
-        'portions': 0,
-        'rotis_needed': rotisNeeded,
-      });
-      debugPrint('✅ [SUPABASE DB SUCCESS] Admin upserted entry for $userName on $sessionId');
+      debugPrint(
+        '✅ [SUPABASE DB SUCCESS] Admin upserted entry for $userName on $sessionId',
+      );
     } catch (e, st) {
       debugPrint('❌ [SUPABASE DB ERROR] Failed adminUpsertEntry: $e\n$st');
       rethrow;
@@ -537,5 +650,4 @@ class SupabaseService {
       return e.toString();
     }
   }
-
 }

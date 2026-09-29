@@ -1,0 +1,7 @@
+# Only the parts of the Supabase CLI config this repo actually relies on.
+# The project itself is hosted; nothing here starts a local stack.
+
+# ping-push is called by Postgres (migration 012), not by a signed-in user,
+# so there is no user JWT to verify. A shared secret header is the gate.
+[functions.ping-push]
+verify_jwt = false

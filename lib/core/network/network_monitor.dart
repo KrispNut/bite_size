@@ -1,12 +1,13 @@
 import 'dart:io';
 import 'dart:async';
-import 'package:bite_size/generated/assets.dart';
+import '/generated/assets.dart';
 import 'package:lottie/lottie.dart';
 import '/core/theme/app_colors.dart';
-import '/core/theme/app_dimens.dart';
-import '/core/theme/textfont_styles.dart';
+import '/core/theme/app_theme.dart';
+import '/core/theme/text_styles.dart';
+import '/core/widgets/neo_progress_bar.dart';
 import 'package:flutter/material.dart';
-import '/core/alerts/app_alerts.dart';
+import '/core/alerts/toast.dart';
 
 class NetworkMonitor {
   static final NetworkMonitor _instance = NetworkMonitor._internal();
@@ -76,12 +77,7 @@ class NetworkMonitor {
           backgroundColor: Colors.transparent,
           insetPadding: const EdgeInsets.all(AppSpace.lg),
           child: Container(
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: AppRadius.rLg,
-              border: Border.all(color: AppColors.border),
-              boxShadow: AppShadow.raised,
-            ),
+            decoration: AppDecor.card(radius: AppRadius.lg),
             padding: const EdgeInsets.all(AppSpace.xl),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -108,17 +104,7 @@ class NetworkMonitor {
                   style: AppText.bodySm,
                 ),
                 const SizedBox(height: AppSpace.md),
-                SizedBox(
-                  width: 90,
-                  child: ClipRRect(
-                    borderRadius: AppRadius.rPill,
-                    child: LinearProgressIndicator(
-                      minHeight: 3,
-                      color: AppColors.primary,
-                      backgroundColor: AppColors.surfaceAlt,
-                    ),
-                  ),
-                ),
+                const NeoProgressBar(),
               ],
             ),
           ),

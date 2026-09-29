@@ -1,8 +1,29 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Declared here on purpose. Debug and profile builds get this from
+         Flutter's own manifests, and release was only ever getting it by
+         merge from google_sign_in_android; dropping that plugin would have
+         taken Supabase, Gemini and avatars down with it. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!-- Android 13+ shows no local notification at all without this: the
+         runtime prompt in NotificationService.requestPermissions() is a
+         silent no-op unless the permission is declared here first. Every
+         alert in the app (pings, invites, arrival, departure) needs it. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+
     <application
         android:label="Bite Size"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
+
+        <!-- Where an FCM notification lands if the sender names no channel.
+             NotificationService creates ping_channel at startup so a push
+             on it is heads-up with sound, never a silent tray entry. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="ping_channel" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
