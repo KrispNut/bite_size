@@ -43,6 +43,12 @@ class $AssetsLottieGen {
     'assets/lottie/loading.json',
   );
   final String noInternet = 'assets/lottie/no_internet.json';
+  final LottieGenImage refresh = const LottieGenImage(
+    'assets/lottie/refresh.json',
+  );
+  final LottieGenImage refreshDark = const LottieGenImage(
+    'assets/lottie/refresh_dark.json',
+  );
   final LottieGenImage runner = const LottieGenImage(
     'assets/lottie/runner.json',
   );

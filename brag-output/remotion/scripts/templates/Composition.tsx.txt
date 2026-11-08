@@ -1,0 +1,48 @@
+import {zColor} from '@remotion/zod-types';
+import {AbsoluteFill, useCurrentFrame, useVideoConfig} from 'remotion';
+import {z} from 'zod';
+import {AnimatedText} from '../../components/AnimatedText';
+import {Background} from '../../components/Background';
+import {videoSchema} from '../../config/video';
+import {framesPerBeat} from '../../lib/beat';
+import {useLayout} from '../../lib/layout';
+import {tween} from '../../lib/motion';
+import {makePalette} from '../../theme/schemes';
+import {gradientText, textStyle} from '../../theme/typography';
+
+// Defaults live in src/Root.tsx; every field here is a control in the Studio's props panel.
+export const __NAME__Schema = videoSchema.extend({
+  title: z.string(),
+  scheme: z.enum(['midnight', 'ocean', 'paper']),
+  accent: zColor(),
+});
+
+export type __NAME__Props = z.infer<typeof __NAME__Schema>;
+
+export const __NAME__: React.FC<__NAME__Props> = ({title, scheme, accent}) => {
+  const frame = useCurrentFrame();
+  const {fps, durationInFrames} = useVideoConfig();
+  const {unit, safe} = useLayout();
+  const palette = makePalette(scheme, accent);
+  const beat = framesPerBeat(fps);
+  const words = title.trim().split(/\s+/);
+  const fadeOut = tween(frame, [durationInFrames - fps * 0.6, durationInFrames - 1], [1, 0]);
+
+  return (
+    <AbsoluteFill style={{backgroundColor: palette.background}}>
+      <AbsoluteFill style={{opacity: fadeOut}}>
+        <Background palette={palette} />
+        <AbsoluteFill style={{padding: safe, justifyContent: 'center'}}>
+          <AnimatedText
+            text={title}
+            delay={Math.round(beat / 2)}
+            stagger={Math.round(beat / 3)}
+            highlight={[words[words.length - 1]]}
+            highlightStyle={gradientText(palette.accent, palette.accent2)}
+            style={{...textStyle('display', unit), color: palette.text}}
+          />
+        </AbsoluteFill>
+      </AbsoluteFill>
+    </AbsoluteFill>
+  );
+};

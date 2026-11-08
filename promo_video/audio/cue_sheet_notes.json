@@ -1,0 +1,242 @@
+{
+ "sample_rate": 48000,
+ "samples": 960000,
+ "seconds": 20.0,
+ "cues": [
+  {
+   "t": 0.05,
+   "frame": 1.5,
+   "sfx": "ding: note v1"
+  },
+  {
+   "t": 0.08,
+   "frame": 2.4,
+   "sfx": "tone: Lunch?"
+  },
+  {
+   "t": 1.0,
+   "frame": 30.0,
+   "sfx": "pop: copper disc"
+  },
+  {
+   "t": 1.05,
+   "frame": 31.5,
+   "sfx": "ding: note v2"
+  },
+  {
+   "t": 2.0,
+   "frame": 60.0,
+   "sfx": "whoosh: marquee"
+  },
+  {
+   "t": 2.05,
+   "frame": 61.5,
+   "sfx": "ding: note v3"
+  },
+  {
+   "t": 3.05,
+   "frame": 91.5,
+   "sfx": "ding: note v4"
+  },
+  {
+   "t": 3.133,
+   "frame": 94.0,
+   "sfx": "riser: bigger."
+  },
+  {
+   "t": 4.05,
+   "frame": 121.5,
+   "sfx": "ding: note v5"
+  },
+  {
+   "t": 4.2,
+   "frame": 126.0,
+   "sfx": "whoosh: contrast wipe"
+  },
+  {
+   "t": 5.05,
+   "frame": 151.5,
+   "sfx": "ding: note v6"
+  },
+  {
+   "t": 5.067,
+   "frame": 152.0,
+   "sfx": "air: let it breathe"
+  },
+  {
+   "t": 6.05,
+   "frame": 181.5,
+   "sfx": "ding: note v7"
+  },
+  {
+   "t": 6.067,
+   "frame": 182,
+   "sfx": "bell: v7_final"
+  },
+  {
+   "t": 7.05,
+   "frame": 211.5,
+   "sfx": "ding: note v8"
+  },
+  {
+   "t": 7.2,
+   "frame": 216.0,
+   "sfx": "whoosh: dive into the dot"
+  },
+  {
+   "t": 7.867,
+   "frame": 236.0,
+   "sfx": "IMPACT: green flood"
+  },
+  {
+   "t": 7.867,
+   "frame": 236.0,
+   "sfx": "whoosh: flood to cursor"
+  },
+  {
+   "t": 8.333,
+   "frame": 250.0,
+   "sfx": "typing: the headline"
+  },
+  {
+   "t": 9.0,
+   "frame": 270.0,
+   "sfx": "swish: input"
+  },
+  {
+   "t": 9.333,
+   "frame": 280.0,
+   "sfx": "typing: daal mash, 3 rotis"
+  },
+  {
+   "t": 9.667,
+   "frame": 290.0,
+   "sfx": "pop: ROSTER pill"
+  },
+  {
+   "t": 9.867,
+   "frame": 296.0,
+   "sfx": "CLICK: enter"
+  },
+  {
+   "t": 9.95,
+   "frame": 298.5,
+   "sfx": "whoosh: grid tilts in"
+  },
+  {
+   "t": 10.2,
+   "frame": 306,
+   "sfx": "cards: 12 roster cards"
+  },
+  {
+   "t": 11.267,
+   "frame": 338.0,
+   "sfx": "swish: One list."
+  },
+  {
+   "t": 11.6,
+   "frame": 348.0,
+   "sfx": "tone: Twelve lunches."
+  },
+  {
+   "t": 12.5,
+   "frame": 375,
+   "sfx": "HIT: toolkit 1"
+  },
+  {
+   "t": 12.94,
+   "frame": 388.2,
+   "sfx": "whoosh: RUNNER"
+  },
+  {
+   "t": 13.0,
+   "frame": 390,
+   "sfx": "HIT: toolkit 2"
+  },
+  {
+   "t": 13.5,
+   "frame": 405,
+   "sfx": "HIT: toolkit 3"
+  },
+  {
+   "t": 13.7,
+   "frame": 411.0,
+   "sfx": "lock: LIST LOCKS"
+  },
+  {
+   "t": 14.0,
+   "frame": 420,
+   "sfx": "HIT: toolkit 4"
+  },
+  {
+   "t": 14.2,
+   "frame": 426.0,
+   "sfx": "blip: radar"
+  },
+  {
+   "t": 14.5,
+   "frame": 435,
+   "sfx": "HIT: toolkit 5"
+  },
+  {
+   "t": 14.5,
+   "frame": 435,
+   "sfx": "ping: PING"
+  },
+  {
+   "t": 15.067,
+   "frame": 452.0,
+   "sfx": "swish: Order."
+  },
+  {
+   "t": 15.267,
+   "frame": 458.0,
+   "sfx": "swish: Fetch."
+  },
+  {
+   "t": 15.4,
+   "frame": 462,
+   "sfx": "count: Rs 0 to Rs 3,300"
+  },
+  {
+   "t": 15.467,
+   "frame": 464.0,
+   "sfx": "swish: Settle."
+  },
+  {
+   "t": 16.667,
+   "frame": 500,
+   "sfx": "chime: SETTLED"
+  },
+  {
+   "t": 16.8,
+   "frame": 504.0,
+   "sfx": "whoosh: tile wipe"
+  },
+  {
+   "t": 17.6,
+   "frame": 528.0,
+   "sfx": "shimmer: logo assembles"
+  },
+  {
+   "t": 17.6,
+   "frame": 528,
+   "sfx": "CHIME: logo"
+  },
+  {
+   "t": 18.267,
+   "frame": 548.0,
+   "sfx": "typing: bite size"
+  },
+  {
+   "t": 18.8,
+   "frame": 564.0,
+   "sfx": "swish: Any other orders?"
+  },
+  {
+   "t": 19.2,
+   "frame": 576.0,
+   "sfx": "pop: packs line"
+  }
+ ]
+}

@@ -1,0 +1,91 @@
+{
+  "variant": "notes",
+  "fps": 30,
+  "durationInFrames": 600,
+  "width": 1920,
+  "height": 1080,
+  "bpm": 120,
+
+  "notes": {
+    "versions": [0, 30, 60, 90, 120, 150, 180, 210],
+    "zoomStart": 216,
+    "fill": 236
+  },
+
+  "prompt": {
+    "morphStart": 236,
+    "morphEnd": 248,
+    "head": 250,
+    "headUp": 268,
+    "field": 270,
+    "type": 280,
+    "pill": 290,
+    "chips": 284,
+    "enter": 296
+  },
+
+  "grid": {
+    "start": 300,
+    "firstCard": 306,
+    "cardStep": 3.5,
+    "caption1": 338,
+    "caption2": 348
+  },
+
+  "tools": {
+    "words": [375, 390, 405, 420, 435],
+    "end": 450
+  },
+
+  "chart": {
+    "start": 450,
+    "lines": [452, 458, 464],
+    "card": 454,
+    "sub": 472,
+    "countStart": 462,
+    "countEnd": 500,
+    "tags": [484, 500]
+  },
+
+  "tiles": {
+    "start": 504,
+    "full": 524
+  },
+
+  "end": {
+    "start": 524,
+    "logo": 528,
+    "chime": 528,
+    "word": 548,
+    "tagline": 564,
+    "url": 576,
+    "fadeStart": 570
+  },
+
+  "music": {
+    "drop": 8.0,
+    "bright": 12.5,
+    "chords": [
+      [0.0, 2.0, "B1", ["B3", "D4", "F#4", "A4", "C#5"]],
+      [2.0, 4.0, "G1", ["G3", "B3", "D4", "F#4", "A4"]],
+      [4.0, 6.0, "B1", ["B3", "D4", "F#4", "A4", "C#5"]],
+      [6.0, 8.0, "A1", ["A3", "C#4", "E4", "F#4", "B4"]],
+      [8.0, 10.0, "D2", ["D4", "F#4", "A4", "C#5", "E5"]],
+      [10.0, 12.0, "B1", ["B3", "D4", "F#4", "A4", "C#5"]],
+      [12.0, 14.0, "G1", ["G3", "B3", "D4", "F#4", "A4"]],
+      [14.0, 16.0, "A1", ["A3", "C#4", "E4", "F#4", "B4"]],
+      [16.0, 17.6, "E2", ["E3", "G3", "B3", "D4", "F#4"]],
+      [17.6, 20.0, "D2", ["D3", "A3", "D4", "F#4", "A4", "E5"]]
+    ]
+  },
+
+  "duck": [240, 300, 375, 450, 528],
+
+  "chapters": [
+    { "from": 240, "label": "01/05 ▪ PROMPT" },
+    { "from": 300, "label": "02/05 ▪ ROSTER" },
+    { "from": 375, "label": "03/05 ▪ TOOLKIT" },
+    { "from": 450, "label": "04/05 ▪ SETTLE" },
+    { "from": 524, "label": "05/05 ▪ BITE SIZE" }
+  ]
+}

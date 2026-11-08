@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import '/core/theme/activity_packs.dart';
 import '/core/theme/app_colors.dart';
 import '/core/theme/app_theme.dart';
 import '/core/theme/text_styles.dart';
 import '/core/widgets/app_icon.dart';
+import '/core/widgets/domino_scroll.dart';
 import '/core/widgets/hint_banner.dart';
+import '/core/widgets/lottie_refresh.dart';
 import '/core/widgets/pill_button.dart';
 import '/features/advisor_ai/widgets/advisor_sheet.dart';
 import '/features/dashboard/dashboard_viewmodel.dart';
@@ -58,127 +59,135 @@ class DashboardBody extends StatelessWidget {
     final departed = session.hasDeparted;
     final headcount = isLoading ? 3 : viewModel.participantCount;
 
-    return LiquidPullToRefresh(
+    return LottieRefresh(
       // Keeps the dashboard on screen while it reloads, and lets go once the
       // fresh data is in rather than after a fixed delay.
       onRefresh: () => viewModel.refresh(showSkeleton: false),
-      // The brand tile colour with the warm accent spinning in it: the same
-      // pairing as the runner card and its button.
-      color: AppColors.primaryDeep,
-      backgroundColor: AppColors.accentFill,
-      height: 88,
-      borderWidth: 3,
-      springAnimationDurationInMilliseconds: 650,
-      animSpeedFactor: 1.6,
-      showChildOpacityTransition: false,
-      child: ListView(
-        padding: const EdgeInsets.fromLTRB(
-          AppSpace.md,
-          AppSpace.sm,
-          AppSpace.md,
-          AppSpace.huge,
-        ),
-        children: [
-          if (modules.roster) ...[
-            RosterStatusBar(session: session),
-            const SizedBox(height: AppSpace.md),
-          ],
+      // Rows trail the scroll and spring back, further rows more. Tuned strong
+      // because the dashboard is only a handful of rows tall.
+      child: DominoScroll(
+        lagPerItem: 0.2,
+        edgeGain: 0.6,
+        damping: 13,
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpace.md,
+            AppSpace.sm,
+            AppSpace.md,
+            AppSpace.huge,
+          ),
+          children: _dominoes([
+            if (modules.roster) ...[
+              RosterStatusBar(session: session),
+              const SizedBox(height: AppSpace.md),
+            ],
 
-          if (!isLoading && viewModel.myPendingInvites.isNotEmpty) ...[
-            PendingInvitesCard(viewModel: viewModel),
-            const SizedBox(height: AppSpace.sm),
-          ],
+            if (!isLoading && viewModel.myPendingInvites.isNotEmpty) ...[
+              PendingInvitesCard(viewModel: viewModel),
+              const SizedBox(height: AppSpace.sm),
+            ],
 
-          if (modules.errand) ...[
-            if (session.hasArrived)
-              ArrivalCard(session: session)
-            else
-              RunnerCard(viewModel: viewModel, session: session),
-            const SizedBox(height: AppSpace.sm),
-          ],
+            if (modules.errand) ...[
+              if (session.hasArrived)
+                ArrivalCard(session: session)
+              else
+                RunnerCard(viewModel: viewModel, session: session),
+              const SizedBox(height: AppSpace.sm),
+            ],
 
-          // A pack with units but no errand still has one number to show;
-          // a pack with no roster has nowhere else to say who's in.
-          if (!modules.errand && modules.units)
-            _FactLine(
-              svgAsset: Assets.svg.roti.path,
-              text: '${labels.unitCount(session.totalUnits)} to buy',
-            ),
-          if (!modules.roster && headcount > 0)
-            _FactLine(
-              svgAsset: Assets.svg.salan.path,
-              text: '$headcount in the group',
-            ),
-
-          if (modules.roster) ...[
-            const SizedBox(height: AppSpace.md),
-            SectionHeader(
-              title: "Today's roster",
-              count: entries.length,
-              action: modules.advisor
-                  ? PillButton(
-                      label: 'AI CHECK',
-                      icon: Icons.auto_awesome_rounded,
-                      color: AppColors.primary,
-                      onTap: () => AdvisorSheet.show(context),
-                    )
-                  : null,
-            ),
-            const SizedBox(height: AppSpace.sm),
-
-            // Says nothing unless what was brought falls short.
-            if (modules.coverage && !isLoading)
-              CoverageWarning(
-                headcount: headcount,
-                covers: session.totalCovers,
+            // A pack with units but no errand still has one number to show;
+            // a pack with no roster has nowhere else to say who's in.
+            if (!modules.errand && modules.units)
+              _FactLine(
+                svgAsset: Assets.svg.roti.path,
+                text: '${labels.unitCount(session.totalUnits)} to buy',
+              ),
+            if (!modules.roster && headcount > 0)
+              _FactLine(
+                svgAsset: Assets.svg.salan.path,
+                text: '$headcount in the group',
               ),
 
-            if (entries.isEmpty)
-              RosterEmptyCard(
-                name: viewModel.currentUserName,
-                photoUrl: viewModel.currentUserPhotoUrl,
-                onTap: departed ? null : () => AddEntrySheet.show(context),
+            if (modules.roster) ...[
+              const SizedBox(height: AppSpace.md),
+              SectionHeader(
+                title: "Today's roster",
+                count: entries.length,
+                action: modules.advisor
+                    ? PillButton(
+                        label: 'AI CHECK',
+                        icon: Icons.auto_awesome_rounded,
+                        color: AppColors.primary,
+                        onTap: () => AdvisorSheet.show(context),
+                      )
+                    : null,
+              ),
+              const SizedBox(height: AppSpace.sm),
+
+              // Says nothing unless what was brought falls short.
+              if (modules.coverage && !isLoading)
+                CoverageWarning(
+                  headcount: headcount,
+                  covers: session.totalCovers,
+                ),
+
+              if (entries.isEmpty)
+                RosterEmptyCard(
+                  name: viewModel.currentUserName,
+                  photoUrl: viewModel.currentUserPhotoUrl,
+                  onTap: departed ? null : () => AddEntrySheet.show(context),
+                )
+              else
+                ...entries.map(
+                  (entry) => RosterTile(
+                    entry: entry,
+                    isMe: entry.userId == viewModel.currentUid,
+                  ),
+                ),
+            ],
+
+            const SizedBox(height: AppSpace.lg),
+            SectionHeader(
+              title: labels.expensePluralTitle,
+              count: viewModel.sharedExpenses.length,
+              action: departed
+                  ? null
+                  : PillButton(
+                      label: 'ADD',
+                      icon: Icons.add_rounded,
+                      color: AppColors.accentWarm,
+                      onTap: () => ShareExpenseSheet.show(context),
+                    ),
+            ),
+            const SizedBox(height: AppSpace.sm),
+
+            if (viewModel.sharedExpenses.isEmpty)
+              HintBanner(
+                svgAsset: Assets.svg.plate.path,
+                message:
+                    'Splitting something with a few people? Add it here — they '
+                    'get asked to confirm, and only the people who say yes get '
+                    'charged.',
               )
             else
-              ...entries.map(
-                (entry) => RosterTile(
-                  entry: entry,
-                  isMe: entry.userId == viewModel.currentUid,
-                ),
+              ...viewModel.sharedExpenses.map(
+                (expense) =>
+                    SharedExpenseTile(expense: expense, viewModel: viewModel),
               ),
-          ],
-
-          const SizedBox(height: AppSpace.lg),
-          SectionHeader(
-            title: labels.expensePluralTitle,
-            count: viewModel.sharedExpenses.length,
-            action: departed
-                ? null
-                : PillButton(
-                    label: 'ADD',
-                    icon: Icons.add_rounded,
-                    color: AppColors.accentWarm,
-                    onTap: () => ShareExpenseSheet.show(context),
-                  ),
-          ),
-          const SizedBox(height: AppSpace.sm),
-
-          if (viewModel.sharedExpenses.isEmpty)
-            HintBanner(
-              svgAsset: Assets.svg.plate.path,
-              message:
-                  'Splitting something with a few people? Add it here — they '
-                  'get asked to confirm, and only the people who say yes get '
-                  'charged.',
-            )
-          else
-            ...viewModel.sharedExpenses.map(
-              (expense) =>
-                  SharedExpenseTile(expense: expense, viewModel: viewModel),
-            ),
-        ],
+          ]),
+        ),
       ),
     );
+  }
+
+  /// Gives every row but the spacers a [DominoItem], numbered top to bottom,
+  /// so the gaps don't count towards how far a row lags.
+  static List<Widget> _dominoes(List<Widget> rows) {
+    var index = 0;
+    return [
+      for (final row in rows)
+        row is SizedBox ? row : DominoItem(index: index++, child: row),
+    ];
   }
 }
 

@@ -1,0 +1,292 @@
+{
+ "sample_rate": 48000,
+ "samples": 960000,
+ "seconds": 20.0,
+ "cues": [
+  {
+   "t": 0.0,
+   "frame": 0.0,
+   "sfx": "whoosh: mascot peeks in"
+  },
+  {
+   "t": 0.42,
+   "frame": 12.6,
+   "sfx": "boing: mascot lands"
+  },
+  {
+   "t": 0.533,
+   "frame": 16.0,
+   "sfx": "pop: speech bubble"
+  },
+  {
+   "t": 0.603,
+   "frame": 18.1,
+   "sfx": "psst"
+  },
+  {
+   "t": 1.2,
+   "frame": 36.0,
+   "sfx": "swish: 'Who's in'"
+  },
+  {
+   "t": 1.933,
+   "frame": 58.0,
+   "sfx": "tone: 'lunch?'"
+  },
+  {
+   "t": 2.4,
+   "frame": 72.0,
+   "sfx": "plink: '?' dot"
+  },
+  {
+   "t": 2.417,
+   "frame": 72.5,
+   "sfx": "whoosh: circle wipe"
+  },
+  {
+   "t": 3.2,
+   "frame": 96.0,
+   "sfx": "IMPACT: brand field"
+  },
+  {
+   "t": 3.2,
+   "frame": 96.0,
+   "sfx": "whoosh: mascot rises"
+  },
+  {
+   "t": 3.48,
+   "frame": 104.4,
+   "sfx": "whoosh: card 1"
+  },
+  {
+   "t": 3.813,
+   "frame": 114.4,
+   "sfx": "whoosh: card 2"
+  },
+  {
+   "t": 4.147,
+   "frame": 124.4,
+   "sfx": "whoosh: card 3"
+  },
+  {
+   "t": 5.283,
+   "frame": 158.5,
+   "sfx": "whoosh: field into phone"
+  },
+  {
+   "t": 6.2,
+   "frame": 186.0,
+   "sfx": "land: phone"
+  },
+  {
+   "t": 6.6,
+   "frame": 198.0,
+   "sfx": "tone: app opens"
+  },
+  {
+   "t": 6.667,
+   "frame": 200.0,
+   "sfx": "swish: 'Bite Size turns it into'"
+  },
+  {
+   "t": 7.933,
+   "frame": 238.0,
+   "sfx": "tone: 'runner.'"
+  },
+  {
+   "t": 8.453,
+   "frame": 253.6,
+   "sfx": "whoosh: camera push"
+  },
+  {
+   "t": 8.467,
+   "frame": 254.0,
+   "sfx": "CLICK: Count me in"
+  },
+  {
+   "t": 9.333,
+   "frame": 280.0,
+   "sfx": "IMPACT: into the bento"
+  },
+  {
+   "t": 9.333,
+   "frame": 280.0,
+   "sfx": "air: pull back"
+  },
+  {
+   "t": 10.0,
+   "frame": 300,
+   "sfx": "typing: Bilal, Sara, Ali"
+  },
+  {
+   "t": 10.2,
+   "frame": 306.0,
+   "sfx": "swish: month-end card"
+  },
+  {
+   "t": 10.533,
+   "frame": 316.0,
+   "sfx": "dot: MON"
+  },
+  {
+   "t": 10.667,
+   "frame": 320.0,
+   "sfx": "dot: TUE"
+  },
+  {
+   "t": 10.8,
+   "frame": 324.0,
+   "sfx": "dot: WED"
+  },
+  {
+   "t": 10.933,
+   "frame": 328.0,
+   "sfx": "dot: THU"
+  },
+  {
+   "t": 11.067,
+   "frame": 332.0,
+   "sfx": "dot: FRI"
+  },
+  {
+   "t": 11.133,
+   "frame": 334.0,
+   "sfx": "swish: who's in card"
+  },
+  {
+   "t": 11.467,
+   "frame": 344.0,
+   "sfx": "check: row 1"
+  },
+  {
+   "t": 11.733,
+   "frame": 352.0,
+   "sfx": "check: row 2"
+  },
+  {
+   "t": 11.867,
+   "frame": 356.0,
+   "sfx": "swish: lock card"
+  },
+  {
+   "t": 12.067,
+   "frame": 362.0,
+   "sfx": "tone: split 3 ways"
+  },
+  {
+   "t": 12.133,
+   "frame": 364.0,
+   "sfx": "lock: chip 1"
+  },
+  {
+   "t": 12.333,
+   "frame": 370.0,
+   "sfx": "lock: chip 2"
+  },
+  {
+   "t": 12.4,
+   "frame": 372,
+   "sfx": "chime: everyone's in, Rs 160"
+  },
+  {
+   "t": 12.533,
+   "frame": 376.0,
+   "sfx": "lock: chip 3"
+  },
+  {
+   "t": 12.6,
+   "frame": 378.0,
+   "sfx": "swish: october bill"
+  },
+  {
+   "t": 12.733,
+   "frame": 382,
+   "sfx": "count: Rs 3,300.00"
+  },
+  {
+   "t": 13.467,
+   "frame": 404.0,
+   "sfx": "STAMP: 'Sorted.'"
+  },
+  {
+   "t": 13.867,
+   "frame": 416.0,
+   "sfx": "whoosh: stamp settles"
+  },
+  {
+   "t": 13.933,
+   "frame": 418,
+   "sfx": "chime: billed at month-end"
+  },
+  {
+   "t": 14.067,
+   "frame": 422.0,
+   "sfx": "pop: badge 1"
+  },
+  {
+   "t": 14.2,
+   "frame": 426.0,
+   "sfx": "pop: badge 2"
+  },
+  {
+   "t": 14.333,
+   "frame": 430.0,
+   "sfx": "pop: badge 3"
+  },
+  {
+   "t": 14.35,
+   "frame": 430.5,
+   "sfx": "whoosh: dark iris"
+  },
+  {
+   "t": 14.467,
+   "frame": 434.0,
+   "sfx": "pop: badge 4"
+  },
+  {
+   "t": 15.333,
+   "frame": 460.0,
+   "sfx": "boom: dark stage"
+  },
+  {
+   "t": 15.467,
+   "frame": 464.0,
+   "sfx": "swish: 'You'"
+  },
+  {
+   "t": 15.8,
+   "frame": 474.0,
+   "sfx": "tone: 'bite.'"
+  },
+  {
+   "t": 16.867,
+   "frame": 506.0,
+   "sfx": "shimmer: 'size.' glows"
+  },
+  {
+   "t": 17.017,
+   "frame": 510.5,
+   "sfx": "whoosh: light iris"
+  },
+  {
+   "t": 17.933,
+   "frame": 538,
+   "sfx": "CHIME: wordmark"
+  },
+  {
+   "t": 18.267,
+   "frame": 548.0,
+   "sfx": "swish: tagline"
+  },
+  {
+   "t": 18.333,
+   "frame": 550.0,
+   "sfx": "boing: mascot peeks over"
+  },
+  {
+   "t": 18.6,
+   "frame": 558.0,
+   "sfx": "pop: Count me in"
+  }
+ ]
+}

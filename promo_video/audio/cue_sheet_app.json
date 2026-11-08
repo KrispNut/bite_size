@@ -1,0 +1,337 @@
+{
+ "sample_rate": 48000,
+ "samples": 960000,
+ "seconds": 20.0,
+ "cues": [
+  {
+   "t": 0.267,
+   "frame": 8.0,
+   "sfx": "swish: headline"
+  },
+  {
+   "t": 0.333,
+   "frame": 10.0,
+   "sfx": "pop: bubble 1"
+  },
+  {
+   "t": 0.6,
+   "frame": 18.0,
+   "sfx": "pop: bubble 2"
+  },
+  {
+   "t": 0.867,
+   "frame": 26.0,
+   "sfx": "pop: bubble 3"
+  },
+  {
+   "t": 0.933,
+   "frame": 28.0,
+   "sfx": "tone: 'chat?'"
+  },
+  {
+   "t": 1.133,
+   "frame": 34.0,
+   "sfx": "pop: bubble 4"
+  },
+  {
+   "t": 1.4,
+   "frame": 42.0,
+   "sfx": "pop: bubble 5"
+  },
+  {
+   "t": 1.633,
+   "frame": 49.0,
+   "sfx": "pop: bubble 6"
+  },
+  {
+   "t": 1.8,
+   "frame": 54.0,
+   "sfx": "swell: chaos"
+  },
+  {
+   "t": 1.867,
+   "frame": 56.0,
+   "sfx": "pop: bubble 7"
+  },
+  {
+   "t": 2.067,
+   "frame": 62.0,
+   "sfx": "pop: bubble 8"
+  },
+  {
+   "t": 2.2,
+   "frame": 66.0,
+   "sfx": "plink: '?' dot"
+  },
+  {
+   "t": 2.467,
+   "frame": 74.0,
+   "sfx": "whoosh: circle wipe"
+  },
+  {
+   "t": 3.0,
+   "frame": 90.0,
+   "sfx": "IMPACT: emerald wipe"
+  },
+  {
+   "t": 3.5,
+   "frame": 105,
+   "sfx": "chime: splash lockup"
+  },
+  {
+   "t": 3.883,
+   "frame": 116.5,
+   "sfx": "whoosh: splash into phone"
+  },
+  {
+   "t": 4.533,
+   "frame": 136.0,
+   "sfx": "land: phone"
+  },
+  {
+   "t": 4.667,
+   "frame": 140.0,
+   "sfx": "tone: app launches"
+  },
+  {
+   "t": 4.867,
+   "frame": 146.0,
+   "sfx": "swish: 'One list.'"
+  },
+  {
+   "t": 5.333,
+   "frame": 160.0,
+   "sfx": "tone: 'arguments.'"
+  },
+  {
+   "t": 5.92,
+   "frame": 177.6,
+   "sfx": "whoosh: camera push"
+  },
+  {
+   "t": 6.467,
+   "frame": 194.0,
+   "sfx": "IMPACT: into the invite"
+  },
+  {
+   "t": 6.533,
+   "frame": 196.0,
+   "sfx": "swish: 'A cost is an'"
+  },
+  {
+   "t": 6.8,
+   "frame": 204.0,
+   "sfx": "tone: 'invite.'"
+  },
+  {
+   "t": 7.067,
+   "frame": 212.0,
+   "sfx": "CLICK: Count me in"
+  },
+  {
+   "t": 7.267,
+   "frame": 218.0,
+   "sfx": "ding: you're in"
+  },
+  {
+   "t": 7.4,
+   "frame": 222.0,
+   "sfx": "swish: invite answered"
+  },
+  {
+   "t": 7.6,
+   "frame": 228.0,
+   "sfx": "scroll: to the shared meal"
+  },
+  {
+   "t": 8.333,
+   "frame": 250,
+   "sfx": "chime: Sara accepts, Rs 160 each"
+  },
+  {
+   "t": 8.733,
+   "frame": 262.0,
+   "sfx": "scroll: back to the runner"
+  },
+  {
+   "t": 9.2,
+   "frame": 276.0,
+   "sfx": "swish: 'Runner leaves.'"
+  },
+  {
+   "t": 9.333,
+   "frame": 280.0,
+   "sfx": "CLICK: Start the tandoor run"
+  },
+  {
+   "t": 9.533,
+   "frame": 286.0,
+   "sfx": "pop: Heading out?"
+  },
+  {
+   "t": 9.667,
+   "frame": 290.0,
+   "sfx": "tone: 'locks.'"
+  },
+  {
+   "t": 10.067,
+   "frame": 302.0,
+   "sfx": "CLICK: Lock it & go"
+  },
+  {
+   "t": 10.333,
+   "frame": 310.0,
+   "sfx": "LOCK: list locked"
+  },
+  {
+   "t": 10.5,
+   "frame": 315.0,
+   "sfx": "ding: off on the tandoor run"
+  },
+  {
+   "t": 10.533,
+   "frame": 316.0,
+   "sfx": "air: pull back"
+  },
+  {
+   "t": 11.16,
+   "frame": 334.8,
+   "sfx": "whoosh: ledger page"
+  },
+  {
+   "t": 11.333,
+   "frame": 340.0,
+   "sfx": "swish: 'One price'"
+  },
+  {
+   "t": 11.77,
+   "frame": 353.1,
+   "sfx": "tone: 'roti.'"
+  },
+  {
+   "t": 11.78,
+   "frame": 353.4,
+   "sfx": "whoosh: settle sheet"
+  },
+  {
+   "t": 12.067,
+   "frame": 362.0,
+   "sfx": "tick: price field"
+  },
+  {
+   "t": 12.267,
+   "frame": 368.0,
+   "sfx": "key: '2'"
+  },
+  {
+   "t": 12.467,
+   "frame": 374.0,
+   "sfx": "key: '5'"
+  },
+  {
+   "t": 12.8,
+   "frame": 384.0,
+   "sfx": "CLICK: Settle October"
+  },
+  {
+   "t": 13.0,
+   "frame": 390,
+   "sfx": "CHIME: October settled"
+  },
+  {
+   "t": 13.167,
+   "frame": 395.0,
+   "sfx": "ding: October settled"
+  },
+  {
+   "t": 13.467,
+   "frame": 404.0,
+   "sfx": "whoosh: back to today"
+  },
+  {
+   "t": 13.77,
+   "frame": 413.1,
+   "sfx": "whoosh: drawer"
+  },
+  {
+   "t": 13.8,
+   "frame": 414.0,
+   "sfx": "swish: 'Same app.'"
+  },
+  {
+   "t": 14.267,
+   "frame": 428.0,
+   "sfx": "tone: 'pack.'"
+  },
+  {
+   "t": 14.267,
+   "frame": 428.0,
+   "sfx": "CLICK: Theme"
+  },
+  {
+   "t": 14.513,
+   "frame": 435.4,
+   "sfx": "whoosh: Theme sheet"
+  },
+  {
+   "t": 14.647,
+   "frame": 439.4,
+   "sfx": "riser: pack switch"
+  },
+  {
+   "t": 15.067,
+   "frame": 452.0,
+   "sfx": "CLICK: Ground Booking"
+  },
+  {
+   "t": 15.237,
+   "frame": 457.1,
+   "sfx": "whoosh: app reloads"
+  },
+  {
+   "t": 15.333,
+   "frame": 460.0,
+   "sfx": "tick: ground row 1"
+  },
+  {
+   "t": 15.467,
+   "frame": 464,
+   "sfx": "chime: Ground Booking"
+  },
+  {
+   "t": 15.467,
+   "frame": 464.0,
+   "sfx": "tick: ground row 2"
+  },
+  {
+   "t": 15.667,
+   "frame": 470.0,
+   "sfx": "tick: ground row 3"
+  },
+  {
+   "t": 16.85,
+   "frame": 505.5,
+   "sfx": "whoosh: light iris"
+  },
+  {
+   "t": 17.5,
+   "frame": 525,
+   "sfx": "CHIME: end card"
+  },
+  {
+   "t": 17.9,
+   "frame": 537.0,
+   "sfx": "swish: tagline"
+  },
+  {
+   "t": 18.233,
+   "frame": 547.0,
+   "sfx": "pop: pack chip 1"
+  },
+  {
+   "t": 18.433,
+   "frame": 553.0,
+   "sfx": "pop: pack chip 2"
+  }
+ ]
+}

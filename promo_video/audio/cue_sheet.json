@@ -1,0 +1,387 @@
+{
+ "sample_rate": 48000,
+ "samples": 960000,
+ "seconds": 20.0,
+ "cues": [
+  {
+   "t": 0.267,
+   "frame": 8.0,
+   "sfx": "swish: headline"
+  },
+  {
+   "t": 0.333,
+   "frame": 10.0,
+   "sfx": "pop: bubble 1"
+  },
+  {
+   "t": 0.6,
+   "frame": 18.0,
+   "sfx": "pop: bubble 2"
+  },
+  {
+   "t": 0.867,
+   "frame": 26.0,
+   "sfx": "pop: bubble 3"
+  },
+  {
+   "t": 0.933,
+   "frame": 28.0,
+   "sfx": "tone: 'chat?'"
+  },
+  {
+   "t": 1.133,
+   "frame": 34.0,
+   "sfx": "pop: bubble 4"
+  },
+  {
+   "t": 1.4,
+   "frame": 42.0,
+   "sfx": "pop: bubble 5"
+  },
+  {
+   "t": 1.633,
+   "frame": 49.0,
+   "sfx": "pop: bubble 6"
+  },
+  {
+   "t": 1.8,
+   "frame": 54.0,
+   "sfx": "swell: chaos"
+  },
+  {
+   "t": 1.867,
+   "frame": 56.0,
+   "sfx": "pop: bubble 7"
+  },
+  {
+   "t": 2.067,
+   "frame": 62.0,
+   "sfx": "pop: bubble 8"
+  },
+  {
+   "t": 2.2,
+   "frame": 66.0,
+   "sfx": "plink: '?' dot"
+  },
+  {
+   "t": 2.467,
+   "frame": 74.0,
+   "sfx": "whoosh: circle wipe"
+  },
+  {
+   "t": 3.0,
+   "frame": 90.0,
+   "sfx": "IMPACT: emerald wipe"
+  },
+  {
+   "t": 3.5,
+   "frame": 105,
+   "sfx": "chime: wordmark"
+  },
+  {
+   "t": 3.733,
+   "frame": 112.0,
+   "sfx": "snap: row 1"
+  },
+  {
+   "t": 3.967,
+   "frame": 119.0,
+   "sfx": "snap: row 2"
+  },
+  {
+   "t": 4.2,
+   "frame": 126.0,
+   "sfx": "snap: row 3"
+  },
+  {
+   "t": 4.433,
+   "frame": 133.0,
+   "sfx": "snap: row 4"
+  },
+  {
+   "t": 4.683,
+   "frame": 140.5,
+   "sfx": "whoosh: field to phone"
+  },
+  {
+   "t": 5.2,
+   "frame": 156.0,
+   "sfx": "swish: 'One list.'"
+  },
+  {
+   "t": 5.333,
+   "frame": 160.0,
+   "sfx": "land: phone"
+  },
+  {
+   "t": 5.667,
+   "frame": 170.0,
+   "sfx": "tone: 'arguments.'"
+  },
+  {
+   "t": 5.867,
+   "frame": 176,
+   "sfx": "ding: shared-cost invite"
+  },
+  {
+   "t": 6.467,
+   "frame": 194.0,
+   "sfx": "whoosh: camera push"
+  },
+  {
+   "t": 6.5,
+   "frame": 195.0,
+   "sfx": "CLICK: Join"
+  },
+  {
+   "t": 7.0,
+   "frame": 210.0,
+   "sfx": "IMPACT: into the ledger"
+  },
+  {
+   "t": 7.0,
+   "frame": 210.0,
+   "sfx": "air: pull back"
+  },
+  {
+   "t": 7.5,
+   "frame": 225.0,
+   "sfx": "CLICK: accept shared cost"
+  },
+  {
+   "t": 7.5,
+   "frame": 225,
+   "sfx": "chime: joined"
+  },
+  {
+   "t": 7.633,
+   "frame": 229.0,
+   "sfx": "pop: avatar 1"
+  },
+  {
+   "t": 7.8,
+   "frame": 234.0,
+   "sfx": "pop: avatar 2"
+  },
+  {
+   "t": 7.967,
+   "frame": 239.0,
+   "sfx": "pop: avatar 3"
+  },
+  {
+   "t": 8.267,
+   "frame": 248.0,
+   "sfx": "swish: card: run"
+  },
+  {
+   "t": 8.667,
+   "frame": 260.0,
+   "sfx": "tick: row 1"
+  },
+  {
+   "t": 8.833,
+   "frame": 265.0,
+   "sfx": "tick: row 2"
+  },
+  {
+   "t": 9.0,
+   "frame": 270.0,
+   "sfx": "tick: row 3"
+  },
+  {
+   "t": 9.167,
+   "frame": 275.0,
+   "sfx": "tick: row 4"
+  },
+  {
+   "t": 10.0,
+   "frame": 300.0,
+   "sfx": "LOCK: runner left"
+  },
+  {
+   "t": 10.167,
+   "frame": 305.0,
+   "sfx": "swish: card: share"
+  },
+  {
+   "t": 10.367,
+   "frame": 311.0,
+   "sfx": "tick: share 1"
+  },
+  {
+   "t": 10.567,
+   "frame": 317.0,
+   "sfx": "tick: share 2"
+  },
+  {
+   "t": 10.667,
+   "frame": 320.0,
+   "sfx": "swish: card: ledger"
+  },
+  {
+   "t": 10.767,
+   "frame": 323.0,
+   "sfx": "tick: share 3"
+  },
+  {
+   "t": 10.933,
+   "frame": 328.0,
+   "sfx": "tick: ledger 1"
+  },
+  {
+   "t": 11.133,
+   "frame": 334.0,
+   "sfx": "tick: ledger 2"
+  },
+  {
+   "t": 11.333,
+   "frame": 340.0,
+   "sfx": "tick: ledger 3"
+  },
+  {
+   "t": 11.533,
+   "frame": 346.0,
+   "sfx": "tick: ledger 4"
+  },
+  {
+   "t": 11.867,
+   "frame": 356,
+   "sfx": "chime: net Rs 0"
+  },
+  {
+   "t": 12.5,
+   "frame": 375.0,
+   "sfx": "STAMP: 'Adds up.'"
+  },
+  {
+   "t": 12.767,
+   "frame": 383.0,
+   "sfx": "whoosh: stamp settles"
+  },
+  {
+   "t": 12.9,
+   "frame": 387.0,
+   "sfx": "pop: badge 1"
+  },
+  {
+   "t": 13.033,
+   "frame": 391.0,
+   "sfx": "pop: badge 2"
+  },
+  {
+   "t": 13.05,
+   "frame": 391.5,
+   "sfx": "whoosh: dark iris"
+  },
+  {
+   "t": 13.167,
+   "frame": 395.0,
+   "sfx": "pop: badge 3"
+  },
+  {
+   "t": 13.3,
+   "frame": 399.0,
+   "sfx": "pop: badge 4"
+  },
+  {
+   "t": 13.6,
+   "frame": 408.0,
+   "sfx": "boom: packs stage"
+  },
+  {
+   "t": 13.667,
+   "frame": 410.0,
+   "sfx": "swish: pack panel"
+  },
+  {
+   "t": 14.0,
+   "frame": 420.0,
+   "sfx": "tick: lunch row 1"
+  },
+  {
+   "t": 14.08,
+   "frame": 422.4,
+   "sfx": "riser: pack switch"
+  },
+  {
+   "t": 14.133,
+   "frame": 424.0,
+   "sfx": "tone: 'pack.'"
+  },
+  {
+   "t": 14.2,
+   "frame": 426.0,
+   "sfx": "tick: lunch row 2"
+  },
+  {
+   "t": 14.4,
+   "frame": 432.0,
+   "sfx": "tick: lunch row 3"
+  },
+  {
+   "t": 14.5,
+   "frame": 435.0,
+   "sfx": "CLICK: Cricket Ground"
+  },
+  {
+   "t": 14.53,
+   "frame": 435.9,
+   "sfx": "whoosh: pack wipe"
+  },
+  {
+   "t": 14.967,
+   "frame": 449,
+   "sfx": "chime: ground pack"
+  },
+  {
+   "t": 15.067,
+   "frame": 452.0,
+   "sfx": "tick: cricket row 1"
+  },
+  {
+   "t": 15.267,
+   "frame": 458.0,
+   "sfx": "tick: cricket row 2"
+  },
+  {
+   "t": 15.533,
+   "frame": 466.0,
+   "sfx": "tick: cricket row 3"
+  },
+  {
+   "t": 15.867,
+   "frame": 476.0,
+   "sfx": "tick: cricket row 4"
+  },
+  {
+   "t": 15.987,
+   "frame": 479.6,
+   "sfx": "tone: Rs 500 each"
+  },
+  {
+   "t": 16.85,
+   "frame": 505.5,
+   "sfx": "whoosh: light iris"
+  },
+  {
+   "t": 17.5,
+   "frame": 525,
+   "sfx": "CHIME: end card"
+  },
+  {
+   "t": 17.9,
+   "frame": 537.0,
+   "sfx": "swish: tagline"
+  },
+  {
+   "t": 18.233,
+   "frame": 547.0,
+   "sfx": "pop: pack chip 1"
+  },
+  {
+   "t": 18.433,
+   "frame": 553.0,
+   "sfx": "pop: pack chip 2"
+  }
+ ]
+}

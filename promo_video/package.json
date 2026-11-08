@@ -1,0 +1,40 @@
+{
+  "name": "bite-size-promo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "20-second Bite Size motion-graphics intro, built with Remotion",
+  "scripts": {
+    "audio": "uv run --no-project python audio/generate_audio.py",
+    "studio": "remotion studio src/index.ts",
+    "render": "remotion render src/index.ts BiteSizePromo out/render_raw.mp4 --codec=h264 --crf=16 --audio-codec=aac --audio-bitrate=320k",
+    "still": "remotion still src/index.ts BiteSizePromo",
+    "typecheck": "tsc --noEmit",
+    "finalize": "ffmpeg -y -v error -i out/render_raw.mp4 -i public/audio/bite_size_mix.wav -map 0:v -map 1:a -c:v copy -c:a aac -b:a 320k -t 20 -movflags +faststart out/bite_size_promo.mp4",
+    "sync-assets": "node scripts/sync-app-assets.mjs",
+    "audio:app": "uv run --no-project python audio/generate_audio.py src/app/timeline_app.json public/audio/bite_size_app_mix.wav audio/cue_sheet_app.json",
+    "render:app": "remotion render src/index.ts BiteSizeApp out/render_app_raw.mp4 --codec=h264 --crf=16 --audio-codec=aac --audio-bitrate=320k",
+    "finalize:app": "ffmpeg -y -v error -i out/render_app_raw.mp4 -i public/audio/bite_size_app_mix.wav -map 0:v -map 1:a -c:v copy -c:a aac -b:a 320k -t 20 -movflags +faststart out/bite_size_app.mp4",
+    "audio:ref": "uv run --no-project python audio/generate_audio.py src/ref/timeline_ref.json public/audio/bite_size_ref_mix.wav audio/cue_sheet_ref.json",
+    "render:ref": "remotion render src/index.ts BiteSizeRef out/render_ref_raw.mp4 --codec=h264 --crf=16 --audio-codec=aac --audio-bitrate=320k",
+    "finalize:ref": "ffmpeg -y -v error -i out/render_ref_raw.mp4 -i public/audio/bite_size_ref_mix.wav -map 0:v -map 1:a -c:v copy -c:a aac -b:a 320k -t 20 -movflags +faststart out/bite_size_ref.mp4",
+    "audio:notes": "uv run --no-project python audio/generate_audio.py src/notes/timeline_notes.json public/audio/bite_size_notes_mix.wav audio/cue_sheet_notes.json",
+    "render:notes": "remotion render src/index.ts BiteSizeNotes out/render_notes_raw.mp4 --codec=h264 --crf=16 --audio-codec=aac --audio-bitrate=320k",
+    "finalize:notes": "ffmpeg -y -v error -i out/render_notes_raw.mp4 -i public/audio/bite_size_notes_mix.wav -map 0:v -map 1:a -c:v copy -c:a aac -b:a 320k -t 20 -movflags +faststart out/bite_size_notes.mp4"
+  },
+  "dependencies": {
+    "@fontsource/material-icons-round": "5.3.0",
+    "@remotion/cli": "4.0.533",
+    "@remotion/fonts": "4.0.533",
+    "@remotion/google-fonts": "4.0.533",
+    "@remotion/lottie": "4.0.533",
+    "@remotion/motion-blur": "4.0.533",
+    "lottie-web": "5.13.0",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "remotion": "4.0.533"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.2",
+    "typescript": "5.9.3"
+  }
+}

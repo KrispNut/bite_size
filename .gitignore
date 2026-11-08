@@ -94,3 +94,15 @@ GoogleService-Info.plist
 # Firebase service account keys (FCM_SERVICE_ACCOUNT_JSON lives on Supabase)
 *-firebase-adminsdk-*.json
 service-account*.json
+
+# Pull-to-refresh hand pipeline (tools/blender/README.md): generated, rebuilt by its scripts
+tools/blender/composed/
+tools/blender/*.ipynb
+tools/blender/*.log
+
+# Remotion promo projects: `npm install` restores node_modules, `npm run render` the videos
+node_modules/
+promo_video/out/
+brag-output/remotion/out/
+brag-output/work/
+brag-output/*.mp4

@@ -1,0 +1,101 @@
+{
+  "variant": "app",
+  "fps": 30,
+  "durationInFrames": 600,
+  "width": 1920,
+  "height": 1080,
+  "bpm": 120,
+
+  "chat": {
+    "label": 4,
+    "line1": 8,
+    "line2": 18,
+    "accent": 28,
+    "bubbles": [10, 18, 26, 34, 42, 49, 56, 62],
+    "shake": 54,
+    "qdot": 66,
+    "wipeStart": 74,
+    "wipeFull": 90
+  },
+
+  "splash": {
+    "rise": 92,
+    "chime": 105,
+    "morphStart": 118,
+    "morphEnd": 136,
+    "launch": 140
+  },
+
+  "overview": {
+    "headline": [146, 154, 160],
+    "pushStart": 180,
+    "pushEnd": 194
+  },
+
+  "invite": {
+    "headline": [196, 204],
+    "press": 212,
+    "toast": 218,
+    "collapse": 222,
+    "scrollDown": 228,
+    "saraAccepts": 250,
+    "scrollUp": 262
+  },
+
+  "lock": {
+    "headline": [276, 284],
+    "pressStart": 280,
+    "dialog": 286,
+    "pressLock": 302,
+    "locked": 310,
+    "toast": 312,
+    "pullBack": 316
+  },
+
+  "ledger": {
+    "push": 336,
+    "headline": [340, 348],
+    "sheet": 354,
+    "tapField": 362,
+    "type": [368, 374],
+    "pressSettle": 384,
+    "settled": 390,
+    "toast": 392,
+    "pullBack": 394,
+    "pop": 404
+  },
+
+  "packs": {
+    "drawer": 414,
+    "headline": [414, 422, 428],
+    "tapTheme": 428,
+    "sheet": 436,
+    "tapGround": 452,
+    "reload": 458,
+    "groundIn": 464,
+    "rows": [460, 464, 470]
+  },
+
+  "end": {
+    "irisStart": 507,
+    "irisFull": 522,
+    "letters": 522,
+    "chime": 525,
+    "tagline": 537,
+    "chips": [547, 553],
+    "mono": 560,
+    "fadeStart": 555
+  },
+
+  "duck": [90, 194, 310, 390, 458],
+
+  "chapters": [
+    { "from": 0, "label": "// 01 — the chat" },
+    { "from": 90, "label": "// 02 — the app" },
+    { "from": 194, "label": "// 03 — the invite" },
+    { "from": 276, "label": "// 04 — the lock" },
+    { "from": 336, "label": "// 05 — the ledger" },
+    { "from": 414, "label": "// 06 — the packs" },
+    { "from": 522, "label": "// 07 — bite size" }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "variant": "ref",
+  "fps": 30,
+  "durationInFrames": 600,
+  "width": 1920,
+  "height": 1080,
+  "bpm": 120,
+  "hook": {
+    "peek": 0,
+    "bubble": 16,
+    "bubbleOut": 48,
+    "label": 30,
+    "line1": [36, 42],
+    "line2": 52,
+    "accent": 58,
+    "qdot": 72,
+    "wipeStart": 74,
+    "wipeFull": 96
+  },
+  "anything": {
+    "rise": 96,
+    "cards": [108, 118, 128],
+    "shrinkStart": 160,
+    "shrinkEnd": 186
+  },
+  "roster": {
+    "launch": 198,
+    "line1": 200,
+    "line2": 218,
+    "line3": [232, 238],
+    "cursorIn": 236,
+    "click": 254,
+    "zoomStart": 256,
+    "zoomEnd": 280
+  },
+  "sorted": {
+    "pullStart": 280,
+    "pullEnd": 304,
+    "type": 300,
+    "month": 306,
+    "dots": [316, 320, 324, 328, 332],
+    "roster": 334,
+    "checks": [344, 352],
+    "lock": 356,
+    "chips": [364, 370, 376],
+    "share": 362,
+    "total": 372,
+    "bill": 378,
+    "billCount": 382,
+    "stamp": 404,
+    "settle": 416,
+    "badges": [422, 426, 430, 434],
+    "joined": 418
+  },
+  "split": {
+    "irisStart": 432,
+    "irisFull": 460,
+    "you": 464,
+    "accent1": 474,
+    "we": [486, 493, 500],
+    "accent2": 506,
+    "whiteStart": 512,
+    "whiteFull": 538
+  },
+  "end": {
+    "letters": 538,
+    "chime": 538,
+    "tagline": 548,
+    "mascot": 550,
+    "cta": 558,
+    "stats": 566,
+    "fadeStart": 562
+  },
+  "music": {
+    "chords": [
+      [0, 3.2, "B1", [ "B3", "D4", "F#4", "A4", "C#5"]
+      ],
+      [3.2, 5.2, "D2", [ "D4", "F#4", "A4", "C#5", "E5"]
+      ],
+      [5.2, 7.2, "B1", [ "B3", "D4", "F#4", "A4", "C#5"]
+      ],
+      [7.2, 9.2, "G1", [ "G3", "B3", "D4", "F#4", "A4"]
+      ],
+      [9.2, 11.2, "A1", [ "A3", "C#4", "E4", "F#4", "B4"]
+      ],
+      [11.2, 13.2, "D2", [ "D4", "F#4", "A4", "C#5", "E5"]
+      ],
+      [13.2, 15.333, "B1", [ "B3", "D4", "F#4", "A4", "C#5"]
+      ],
+      [15.333, 17.933, "A1", [ "A3", "D4", "E4", "G4", "C#5"]
+      ],
+      [17.933, 20, "D2", [ "D3", "A3", "D4", "F#4", "A4", "E5"]
+      ]
+    ]
+  },
+  "duck": [96, 280, 404, 460, 538],
+  "chapters": [
+    {
+      "from": 0,
+      "label": "// 01 — hook"
+    },
+    {
+      "from": 96,
+      "label": "// 02 — anything"
+    },
+    {
+      "from": 186,
+      "label": "// 03 — roster"
+    },
+    {
+      "from": 280,
+      "label": "// 04 — sorted"
+    },
+    {
+      "from": 460,
+      "label": "// 05 — split"
+    }
+  ]
+}

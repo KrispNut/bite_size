@@ -4,8 +4,40 @@ Bite Size runs the shared money for a small group: who's taking part, what they
 put in, how much of the bulk thing to buy, who fetches it, and who owes whom at
 the end of it. It replaces the group chat where all of that used to get lost.
 
-It started as an office lunch app and the lunch is still the default. But the
-engine underneath — people, a session, costs in integer minor units, invitations
+## 🎯 Why it exists
+
+It started as an office lunch. Everyone brings a dish from home, the office
+buys rotis in bulk from the tandoor nearby, and somebody has to go and fetch
+them. The same questions came up every day:
+
+- Who's eating today, and what did they bring?
+- How many rotis do we need?
+- Who's going to the tandoor, and have they left yet?
+- Is there enough food to go round?
+- Two people split a karahi. Who paid, and who owes what?
+- It's the end of the month. What does everyone owe?
+
+The answers were buried in the chat, and settling up meant scrolling back
+through a month of it. Bite Size gives each question one place and one answer,
+and keeps the money fair while it does:
+
+- **Everyone logs their own share.** Nobody keeps a tally for anyone else.
+- **Nobody pays for something they didn't agree to.** A shared cost is an
+  invitation that each person accepts or declines.
+- **The split is exact.** The shares always add up to the bill, down to the
+  last paisa.
+- **The list freezes when the runner leaves.** Nothing changes after the money
+  has been spent.
+- **The month settles in one go.** One person settles it, and the ledger shows
+  who owes whom.
+
+Lunch is still the default, but none of that is really about food. Any small
+group that pools money for a shared purchase has the same problem. A cricket
+team booking a ground by the hour, with someone paying the groundsman, has the
+same kind of day with different words, so the app ships that as a second pack
+and is built to take more.
+
+The engine underneath — people, a session, costs in integer minor units, invitations
 that have to be accepted, an exact split, a ledger — never had anything to do
 with food. So the words, the switched-on features and the colours are
 **configuration, not code**: see [Activity packs](#-activity-packs).
@@ -685,6 +717,15 @@ both), records each frame once and replays it, and stops in the background,
 under another route, or with reduced motion on. Any new looping Lottie should
 go through it too.
 
+**Pull to refresh** is `LottieRefresh` (`lib/core/widgets/lottie_refresh.dart`).
+A cartoon hand comes down, sways about looking for the page, grips it like
+fabric and yanks it up. The page holds there while loading, then drops back
+with a bounce. It plays `refresh.json`, or `refresh_dark.json` in dark mode,
+where the creases are drawn light. Both are image sequences rendered in
+Blender. `tools/blender/README.md` explains how to restyle or re-render them.
+The dashboard rows bounce along through `DominoScroll`
+(`lib/core/widgets/domino_scroll.dart`; tests in `test/domino_scroll_test.dart`).
+
 A Lottie is JSON, not SVG — never hand one to `AppIcon`, which is `SvgPicture`
 underneath and will throw *"Invalid SVG data"* on every rebuild. `BentoTile.art`
 exists so a tile can take an animated mark without pretending it's an SVG.
@@ -966,9 +1007,11 @@ database, not by whether a notification was delivered.
    flutter pub get
    ```
 
-2. **Create `.env` in the project root.** It's declared as an asset in
-   `pubspec.yaml` and loaded at startup — it is *not* passed via
-   `--dart-define` — and it's gitignored.
+2. **Create `.env` in the project root** (start from `.env.example`). It's
+   declared as an asset in `pubspec.yaml` and loaded at startup — it is *not*
+   passed via `--dart-define` — and it's gitignored, so **the build fails
+   without it**. On a new PC, copy `.env` and `android/app/google-services.json`
+   over from the old one privately (password manager, USB). Never commit them.
 
    ```dotenv
    SUPABASE_URL=https://xxxx.supabase.co

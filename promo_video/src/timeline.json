@@ -1,0 +1,90 @@
+{
+  "fps": 30,
+  "durationInFrames": 600,
+  "width": 1920,
+  "height": 1080,
+  "bpm": 120,
+
+  "chat": {
+    "label": 4,
+    "line1": 8,
+    "line2": 18,
+    "accent": 28,
+    "bubbles": [10, 18, 26, 34, 42, 49, 56, 62],
+    "shake": 54,
+    "qdot": 66,
+    "wipeStart": 74,
+    "wipeFull": 90
+  },
+
+  "brand": {
+    "letters": 92,
+    "label": 100,
+    "chime": 105,
+    "rowsIn": 98,
+    "rowSnaps": [112, 119, 126, 133],
+    "morphStart": 142,
+    "morphEnd": 160
+  },
+
+  "phone": {
+    "headline": [156, 164, 170],
+    "invite": 176,
+    "cursorIn": 180,
+    "click": 195,
+    "zoomStart": 197,
+    "zoomEnd": 211
+  },
+
+  "split": {
+    "pullStart": 210,
+    "pullEnd": 228,
+    "joined": 225,
+    "avatars": [229, 234, 239],
+    "each": 245,
+    "card1": 248,
+    "runner": 254,
+    "rows": [260, 265, 270, 275],
+    "total": 282,
+    "lock": 300,
+    "card3": 305,
+    "share": [311, 317, 323],
+    "card4": 320,
+    "ledger": [328, 334, 340, 346],
+    "net": 356,
+    "stamp": 375,
+    "stampSettle": 383,
+    "badges": [387, 391, 395, 399]
+  },
+
+  "packs": {
+    "irisStart": 393,
+    "irisFull": 408,
+    "label": 408,
+    "headline": [410, 418, 424],
+    "card": 410,
+    "office": [420, 426, 432],
+    "toggle": 435,
+    "wipeEnd": 449,
+    "cricket": [452, 458, 466, 476]
+  },
+
+  "end": {
+    "irisStart": 507,
+    "irisFull": 522,
+    "letters": 522,
+    "chime": 525,
+    "tagline": 537,
+    "chips": [547, 553],
+    "mono": 560,
+    "fadeStart": 555
+  },
+
+  "chapters": [
+    { "from": 0, "label": "// 01 — the chat" },
+    { "from": 90, "label": "// 02 — the fix" },
+    { "from": 210, "label": "// 03 — the split" },
+    { "from": 408, "label": "// 04 — the packs" },
+    { "from": 522, "label": "// 05 — bite size" }
+  ]
+}
